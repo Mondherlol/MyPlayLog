@@ -10,7 +10,7 @@ export default function ListInteractions({ list, setList, setProgress }) {
   const [isLikeModalOpen, setIsLikeModalOpen] = useState(false)
   const config = {
     method: isLiked ? 'delete' : 'post',
-    url: `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/like/${list._id}`,
+    url: `${process.env.REACT_APP_IP_ADRESS}/api/lists/like/${list._id}`,
     headers: {
       'Content-Type': 'application/json',
     },

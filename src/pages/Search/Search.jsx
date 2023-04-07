@@ -81,7 +81,8 @@ export default function Search({ searchValue, setSearchValue }) {
     setFilters([...filterss])
     axios
       .get(
-        'http://localhost:8000/api/games/searchs' + location.search.toString()
+        `${process.env.REACT_APP_IP_ADRESS}/api/games/searchs` +
+          location.search.toString()
       )
       .then((res) => {
         if (res.data === 'Pas de resultat.') {

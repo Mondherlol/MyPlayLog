@@ -84,7 +84,7 @@ export default function EditList() {
     setProgress(20)
     console.log(listId)
     axios
-      .get(`http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/${listId}`)
+      .get(`${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`)
       .then((response) => {
         setList(response.data)
         setLoading(false)

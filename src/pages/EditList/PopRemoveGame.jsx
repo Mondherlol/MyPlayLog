@@ -31,7 +31,7 @@ const PopRemoveGame = ({ gameId, setList, list, setProgress }) => {
     setProgress(20)
     axios
       .delete(
-        `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/${list._id}/${gameId}`
+        `${process.env.REACT_APP_IP_ADRESS}/api/lists/${list._id}/${gameId}`
       )
       .then((res) => {
         setProgress(100)

@@ -31,7 +31,7 @@ export default function ListPage(props) {
   useEffect(() => {
     setProgress(20)
     axios
-      .get(`http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/${listId}`)
+      .get(`${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`)
       .then((response) => {
         setList(response.data)
         setLoading(false)

@@ -39,9 +39,7 @@ export default function AddingGameModal({
   const getLists = () => {
     setProgress(10)
     axios
-      .get(
-        `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/withGame/${gameId}`
-      )
+      .get(`${process.env.REACT_APP_IP_ADRESS}/api/lists/withGame/${gameId}`)
       .then((res) => {
         setLists(res.data.lists)
         setFilteredLists(res.data.lists)

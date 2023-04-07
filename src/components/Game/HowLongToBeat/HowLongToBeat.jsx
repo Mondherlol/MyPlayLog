@@ -27,7 +27,7 @@ function HowLongToBeat({ gameName, parentGameName }) {
     const fetchTimeToBeat = async () => {
       try {
         const res = await axios.get(
-          `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/timeToBeat/${gameName}`
+          `${process.env.REACT_APP_IP_ADRESS}/api/timeToBeat/${gameName}`
         )
         if (res.data.length > 0) {
           setTimeToBeat(res.data[0])
@@ -37,7 +37,7 @@ function HowLongToBeat({ gameName, parentGameName }) {
         // try with parentGameName if gameName returned no results
         if (parentGameName !== null) {
           const res2 = await axios.get(
-            `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/timeToBeat/${parentGameName}`
+            `${process.env.REACT_APP_IP_ADRESS}/api/timeToBeat/${parentGameName}`
           )
           if (res2.data.length > 0) {
             setTimeToBeat(res2.data[0])

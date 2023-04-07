@@ -6,9 +6,7 @@ const { confirm } = Modal
 const PopUpDeleteList = ({ listId, navigate }) => {
   const deleteList = () => {
     axios
-      .delete(
-        `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/${listId}`
-      )
+      .delete(`${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`)
       .then((res) => navigate('/lists'))
       .catch((err) => console.log(err))
   }

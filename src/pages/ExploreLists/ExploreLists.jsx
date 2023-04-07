@@ -100,9 +100,9 @@ function ExploreLists() {
   const getLists = () => {
     setProgress(20)
     setIsLoading(true)
-    let uri = `http://${
+    let uri = `${
       process.env.REACT_APP_IP_ADRESS
-    }:8000/api/lists/?page=${currentPage}&limit=${listPerPage}${
+    }/api/lists/?page=${currentPage}&limit=${listPerPage}${
       searchQuery !== null && searchQuery !== '' ? '&q=' + searchQuery : ''
     }${
       isRanked !== null && isRanked !== '' ? '&ranked=' + isRanked : ''

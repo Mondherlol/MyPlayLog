@@ -31,7 +31,7 @@ export default function CreateListModal({
 
     var config = {
       method: 'post',
-      url: `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/`,
+      url: `${process.env.REACT_APP_IP_ADRESS}/api/lists/`,
       headers: {
         'Content-Type': 'application/json',
       },

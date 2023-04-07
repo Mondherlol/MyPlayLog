@@ -124,9 +124,7 @@ function GamePage() {
   useEffect(() => {
     setLoading(true)
     axios
-      .get(
-        `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/games/game/${slug}`
-      )
+      .get(`${process.env.REACT_APP_IP_ADRESS}/api/games/game/${slug}`)
       .then((res) => {
         if (res.data.length === 0) navigate('/404')
         else if (res.data[0].version_parent)
