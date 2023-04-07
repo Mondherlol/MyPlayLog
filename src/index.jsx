@@ -12,10 +12,8 @@ i18next.on('languageChanged', (lng) => {
   document.documentElement.setAttribute('lang', lng)
 })
 root.render(
-  <React.StrictMode>
-    <Router>
-      <ScrollToTop />
-      <Layout />
-    </Router>
-  </React.StrictMode>
+  <Router>
+    <ScrollToTop />
+    <Layout />
+  </Router>
 )
