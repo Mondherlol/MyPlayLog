@@ -1,0 +1,12 @@
+
+@media only screen and (min-width: 650px) {
+    .image-gallery{
+
+        height: 15vh;
+
+
+    }
+}
+.image-gallery{
+    max-height: 30vh;
+}

@@ -1,0 +1,75 @@
+.show-more-less-clickable{
+    color:#FDC500;
+}
+.customized-bg{
+    background: rgba(217, 217, 217, 0.2);
+    border-radius: 8px;
+}
+
+
+  .spoiler-content {
+    filter: blur(4px);
+    transition: 0.3s;
+    
+    }
+ .reveal{
+        filter: blur(0px);
+  }
+
+
+
+
+  /* SHOW MORE */
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* margin: 5px auto; */
+}
+.divider .bar {
+    height: 1px;
+    flex-grow: 1 !important;
+    background-color: rgba(255, 255, 255, 0.423);
+}
+
+.bar {
+    box-shadow: 0px 1px 1px rgba(255, 255, 255, 0.218);
+    z-index: 2;
+    display: flex;
+}
+
+.divider .show-more {
+    padding: 5px;
+    color:  rgb(253, 197, 0);
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.1s ease;
+    font-size: 12px;
+}
+.divider .show-more:hover {
+    color:white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .game-video{
+    transition: 0.2s;
+    overflow: hidden;
+    border-radius:16px;
+
+  }
+  .game-video div{
+    transition: 0.2s;
+
+
+  }
+  .game-video:hover .react-player__preview{
+    filter: brightness(0.8);
+
+    transform: scale(1.2);
+  }
+
+  .game-video  {
+    cursor: pointer;
+  }

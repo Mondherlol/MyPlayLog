@@ -1,0 +1,11 @@
+.listFilterModal .ant-modal-content,
+.listFilterModal .ant-modal-header,
+.listFilterModal .ant-modal-title ,
+.listFilterModal .ant-modal-close-x {
+  border-radius: 20px;
+  background-color: rgb(8,7,27)!important;
+  color:white!important;
+}
+.listFilterModal .ant-modal-content{
+    border: 2px solid white;
+}

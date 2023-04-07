@@ -1,0 +1,13 @@
+
+.SideBarBtnC{
+    color:'rgb(255,255,255,0.6)';
+    text-align:'left';
+    font-weight:'bold';
+    font-size:'2vh';
+    margin:'1vh';
+    transition: color 0.2s ease;
+}
+.SideBarBtnC:hover{
+    color:white;
+}
+

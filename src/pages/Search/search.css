@@ -1,0 +1,10 @@
+.modal .ant-modal-content{
+    background-color: #121031; 
+    color: white;
+}
+
+.cardDiv{
+   width: 120px; 
+   height: 150px; 
+   object-fit: cover;
+}

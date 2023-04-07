@@ -1,0 +1,37 @@
+.sidebarMenu{
+    display: block!important;
+    border-radius: 0px 7px 7px 0px !important;
+    background-color: #08071B;
+    width: 17rem;
+    padding: 0;
+    height:100%;
+    min-height: 100%;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+@keyframes slideFromLeft {
+    0%{
+        transform: translateX(-100%);
+    }
+ }
+
+@keyframes slideFromRight {
+    100%{
+        transform: translateX(-100vh);
+        display: none;
+    }
+ }
+
+
+  .my-node-enter {
+    animation: slideFromLeft 0.4s ease forwards;
+
+
+  }
+  .my-node-exit-active {
+    animation: slideFromRight 1s ease forwards;
+  }
+  

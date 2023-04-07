@@ -1,0 +1,37 @@
+@keyframes slideFromBottom {
+    0%{
+        top:100vh;
+    }
+    100%{
+        top:0vh;
+    }
+}
+
+@media only screen and (min-width: 700px) {
+    .show-on-mobile{
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .ratings-mobile{
+        display: none!important;
+    }
+  
+}
+
+@media only screen and (max-width: 1200px) {
+    .ratings-desktop{
+        display: none!important;
+    }
+  
+}
+
+
+@media only screen and (max-width: 700px) {
+    .hide-on-mobile{
+        display: none;
+    }
+
+    
+}
