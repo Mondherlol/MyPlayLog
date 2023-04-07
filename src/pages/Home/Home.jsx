@@ -68,7 +68,7 @@ function HomePage() {
             />
           </Link>
         </div>
-        <div className="w-full ">
+        <div className="w-full justify-center items-center ">
           <Test />
         </div>
       </Suspense>
