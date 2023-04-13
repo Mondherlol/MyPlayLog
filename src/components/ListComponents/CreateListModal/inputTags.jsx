@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import './styles.scss'
+import { useTranslation } from 'react-i18next'
 
 function InputTag({ tags, setTags }) {
   const [inputValue, setInputValue] = useState('')
+  const { t } = useTranslation()
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value)
@@ -52,8 +54,9 @@ function InputTag({ tags, setTags }) {
         <input
           type="text"
           className="tag-input"
-          placeholder="Add Tag"
+          placeholder={t('add_tag')}
           value={inputValue}
+          maxLength={20}
           onKeyDown={handleInputKeyDown}
           onChange={handleInputChange}
         />
@@ -65,7 +68,7 @@ function InputTag({ tags, setTags }) {
           setTags([])
         }}
       >
-        Clear tags
+        {t('clear_tags')}
       </button>
     </div>
   )

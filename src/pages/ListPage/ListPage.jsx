@@ -1,22 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
+import { useTranslation } from 'react-i18next'
 
+import { LoginData } from '../../Helper/Context'
 import colors from '../../utils/style/colors'
 import RelatedGame from '../../components/RelatedContent/RelatedGame/RelatedGame'
-import { useTranslation } from 'react-i18next'
 import { Loader } from '../../utils/Atoms'
 import FilterList from './FilterList'
 import PopUpDeleteList from '../EditList/PopUpDeleteList'
 import ListInteractions from './ListInteractions'
 import ErrorOccured from '../../components/ErrorOccured/ErrorOccured'
+import GameCard from '../../components/GameCard/GameCard'
 
 const PageWrapper = styled.div`
   min-height: 100vh;
-  padding: 20px;
-  padding-top: 80px;
+  padding-bottom: 20px;
+  @media (min-width: 700px) {
+    padding: 20px;
+  }
+  padding-top: 80px !important;
 `
 
 export default function ListPage(props) {
@@ -26,6 +31,8 @@ export default function ListPage(props) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [progress, setProgress] = useState(0)
+  const { loginData } = useContext(LoginData)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -35,6 +42,7 @@ export default function ListPage(props) {
       .then((response) => {
         setList(response.data)
         setLoading(false)
+        document.title = response.data.name + ' - MyPlayLog'
       })
       .catch((error) => {
         setError(error)
@@ -58,13 +66,10 @@ export default function ListPage(props) {
   }
 
   if (error) {
-    return (
-      <div>
-        <ErrorOccured errorMessage={error.message} />
-      </div>
-    )
+    navigate('/error')
   }
 
+  console.log(loginData)
   return (
     <PageWrapper>
       <LoadingBar
@@ -74,27 +79,33 @@ export default function ListPage(props) {
       />
       {list ? (
         <div className="flex flex-col">
-          <div className=" flex flex-row text-start my-35 w-full items-end">
+          <div className=" flex flex-row p-2  flex-wrap text-start my-35 w-full items-end">
             <h1 className="text-3xl">
               {list.name}
               <span className="text text-sm font-light ">
-                ({list.ranked ? 'RANKED' : 'CLASSIC'})
+                ({list.ranked ? t('top') : t('classic').toUpperCase()})
               </span>
             </h1>
-            <Link
-              to={`/list/${listId}/edit`}
-              className="p-2 ml-2 px-2 bg-[#FCD500] mt-2 hover:text-[#110f32] btn-save-list hover:bg-[#FCD800] text-[#110f32] border-none cursor-pointer max-w-fit"
-            >
-              EDIT
-            </Link>
-            <div className="max-w-fit max-h-fit">
-              <PopUpDeleteList listId={listId} navigate={navigate} />
-            </div>
+            {loginData && loginData._id === list.idOwner && (
+              <>
+                <Link
+                  to={`/list/${listId}/edit`}
+                  className="p-2 ml-2 px-2 bg-[#FCD500] mt-2 hover:text-[#110f32] btn-save-list hover:bg-[#FCD800] text-[#110f32] border-none cursor-pointer max-w-fit"
+                >
+                  {t('edit').toUpperCase()}
+                </Link>
+                <div className="max-w-fit max-h-fit">
+                  <PopUpDeleteList listId={listId} navigate={navigate} />
+                </div>
+              </>
+            )}
           </div>
-          <div className="w-full text-start ">
-            <p className="  text-base">{list.description}</p>
+          <div className="w-full text-start px-2 ">
+            <p className="  text-base  flex-wrap text-ellipsis break-words whitespace-pre-line">
+              {list.description}
+            </p>
           </div>
-          <div className="w-full flex flex-row gap-2 mt-2 items-end">
+          <div className="w-full  px-2 flex flex-row gap-2 mt-2 items-end">
             {list.tags.length > 0 && (
               <>
                 {list.tags.map((tag) => {
@@ -122,30 +133,49 @@ export default function ListPage(props) {
                   setProgress={setProgress}
                 />
                 <div
-                  className="flex flex-wrap flex-row p-4 rounded-xl w-full flex-1 justify-center xl:justify-start  "
+                  className="flex flex-wrap flex-row  md:p-4 rounded-xl w-full flex-1 justify-center xl:justify-start  "
                   style={{
                     backgroundColor: colors.backgroundDerivation,
                     boxShadow: 'inset 0 3px 15px 3px #0009',
                   }}
                 >
                   {' '}
-                  {list.games.map((game) => (
-                    <div key={game.id}>
-                      <RelatedGame game={game} />
-                    </div>
-                  ))}
+                  {list.ranked
+                    ? list.games.map((game) => (
+                        <div key={game.id}>
+                          <RelatedGame game={game} />
+                        </div>
+                      ))
+                    : list.games.map((game) => (
+                        <div key={game.id}>
+                          <GameCard game={game} />
+                        </div>
+                      ))}
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col max-w-fit  items-center mr-8 sticky top-20 h-fit  overflow-y-auto">
-              <img
-                alt="profilePicture"
-                className=" w-20 h-20 rounded-full"
-                src="https://yt3.googleusercontent.com/ytc/AL5GRJV2zd0nD_mcf5rNGqyklKjB9wAGUws5lI60m_XUvg=s900-c-k-c0x00ffffff-no-rj"
-              />
-              <h4 className="text ">Liste de</h4>
-              <h2>{list.idOwner}</h2>
+            <div className="flex flex-col items-center  w-32  mr-8 sticky top-20 h-fit  overflow-y-auto">
+              <Link to={`/user/${list.owner ? list.owner._id : ''}`}>
+                <img
+                  alt="profilePicture"
+                  className=" w-20 h-20 rounded-full"
+                  src={list.owner ? list.owner.profilePic : ''}
+                />
+              </Link>
+
+              <h4 className="text ">{t('list_from')}</h4>
+              <h2
+                className={` ${
+                  list.owner.username.length > 15
+                    ? 'text-sm'
+                    : list.owner.username.length > 10
+                    ? 'text-base'
+                    : ''
+                }   w-32  text-center text-ellipsis  overflow-hidden whitespace-nowrap`}
+              >
+                {list.owner.username}
+              </h2>
               <button
                 className="p-2 px-4 rounded-xl border-3 bg-transparent hover:cursor-pointer w-full hover:bg-[#fdc500]  text-[#fdc500] hover:text-white"
                 style={{
@@ -153,25 +183,26 @@ export default function ListPage(props) {
                   textShadow: '1px 1px 2px black',
                 }}
               >
-                <span className=" font-bold">Suivre</span>
+                <span className=" font-bold">{t('follow')}</span>
               </button>
 
               <h3 className="mt-2">
                 <span style={{ color: colors.primary }}>
                   {list.games.length}{' '}
                 </span>
-                jeux.
+                {t('games')}.
               </h3>
               <span className="w-2/3  border-1 mt-2" />
 
               <ListInteractions
                 list={list}
                 setList={setList}
+                currentUser={loginData}
                 setProgress={setProgress}
               />
               <span className="w-2/3 border border-solid border-1 mt-3 mb-2 " />
 
-              <h4 className="text text-sm font-light ">Created :</h4>
+              <h4 className="text text-sm font-light ">{t('created')} :</h4>
               <h4 className="text text-sm font-normal ">
                 {new Intl.DateTimeFormat(i18n.language, {
                   year: 'numeric',
@@ -184,7 +215,9 @@ export default function ListPage(props) {
 
               {list.lastUpdate && (
                 <>
-                  <h4 className="text text-sm font-light ">Last update :</h4>
+                  <h4 className="text text-sm font-light ">
+                    {t('last_update_list')} :
+                  </h4>
                   <h4 className="text text-sm font-normal ">
                     {new Intl.DateTimeFormat(i18n.language, {
                       year: 'numeric',
@@ -198,14 +231,14 @@ export default function ListPage(props) {
 
               <>
                 <h4 className="text text-sm font-light ">
-                  Liste vue {list.views} fois
+                  {t('list_viewed', { view: list.views })}
                 </h4>
               </>
             </div>
           </div>
         </div>
       ) : (
-        <div>Aucune liste trouvée.</div>
+        <ErrorOccured />
       )}
     </PageWrapper>
   )

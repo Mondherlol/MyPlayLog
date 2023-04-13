@@ -1,11 +1,15 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useContext } from 'react'
 
+import { LoginContext, LoginData } from '../../Helper/Context'
 import colors from '../../utils/style/colors'
 import Home from '../../assets/icons/sidebar/domicile.png'
 import Login from '../../assets/icons/bottombar/login.png'
 import Signup from '../../assets/icons/bottombar/signup.png'
+import explore from '../../assets/icons/sidebar/game-controller.png'
+import lists from '../../assets/icons/sidebar/bookmark.png'
 
 const BottomBarWrapper = styled.div`
   min-width: 320px;
@@ -52,20 +56,37 @@ const StyledLink = styled(Link)`
 
 function BottomBar() {
   const { t } = useTranslation()
+  const { loggedIn } = useContext(LoginContext)
+
   return (
     <BottomBarWrapper>
       <StyledLink to="/">
         <img className="icon" src={Home} alt="Home Icon" />
         <div>{t('home')}</div>
       </StyledLink>
-      <StyledLink to="/login">
-        <img className="icon" src={Login} alt="Login Icon" />
-        <div>{t('login')}</div>
-      </StyledLink>
-      <StyledLink to="/signup">
-        <img className="icon" src={Signup} alt="Signup Icon" />
-        <div>{t('sign_up')}</div>
-      </StyledLink>
+      {!loggedIn ? (
+        <>
+          <StyledLink to="/login">
+            <img className="icon" src={Login} alt="Login Icon" />
+            <div>{t('login')}</div>
+          </StyledLink>
+          <StyledLink to="/signup">
+            <img className="icon" src={Signup} alt="Signup Icon" />
+            <div>{t('sign_up')}</div>
+          </StyledLink>
+        </>
+      ) : (
+        <>
+          <StyledLink to="/search">
+            <img className="icon" src={explore} alt="Explore Icon" />
+            <div>{t('explore')}</div>
+          </StyledLink>
+          <StyledLink to="/lists">
+            <img className="icon" src={lists} alt="List Icon" />
+            <div>{t('lists')}</div>
+          </StyledLink>
+        </>
+      )}
     </BottomBarWrapper>
   )
 }

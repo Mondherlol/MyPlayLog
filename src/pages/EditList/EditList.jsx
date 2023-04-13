@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -7,12 +7,15 @@ import colors from '../../utils/style/colors'
 import './EditsList.css'
 import { Input, ConfigProvider, Radio } from 'antd'
 import LoadingBar from 'react-top-loading-bar'
-
+import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+
+import { LoginData } from '../../Helper/Context'
 import { Loader } from '../../utils/Atoms'
 import DragAndDropGames from './DragAndDropGames'
 import EditListTags from './EditListTags'
 import PopUpDeleteList from './PopUpDeleteList'
+import ErrorOccured from '../../components/ErrorOccured/ErrorOccured'
 
 const { TextArea } = Input
 
@@ -57,12 +60,13 @@ const InputName = styled.input`
 `
 
 export default function EditList() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { listId } = useParams()
   const [list, setList] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [progress, setProgress] = useState(0)
+  const { loginData } = useContext(LoginData)
 
   const [name, setName] = useState('')
   const [isPublic, setIsPublic] = useState(true)
@@ -82,11 +86,15 @@ export default function EditList() {
 
   useEffect(() => {
     setProgress(20)
-    console.log(listId)
     axios
       .get(`${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`)
       .then((response) => {
         setList(response.data)
+        if (
+          !loginData ||
+          (loginData && loginData._id !== response.data.idOwner)
+        )
+          navigate('/login')
         setLoading(false)
         setName(response.data.name)
         setDescription(
@@ -100,6 +108,10 @@ export default function EditList() {
         setError(error)
         console.log(error)
         setLoading(false)
+        toast.error(error.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+        })
       })
       .finally(() => setProgress(100))
   }, [listId])
@@ -132,7 +144,8 @@ export default function EditList() {
 
     const config = {
       method: 'put',
-      url: `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/${listId}`,
+      withCredentials: true,
+      url: `${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -142,9 +155,19 @@ export default function EditList() {
       .then((res) => {
         console.log(res)
         setProgress(100)
+        toast.success(t('list_updated_with_success'), {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+        })
         navigate(`/list/${listId}`)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        toast.error(err.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+        })
+      })
     setProgress(100)
   }
 
@@ -175,12 +198,12 @@ export default function EditList() {
       {list ? (
         <div className="flex flex-col gap-4">
           <div className=" text-start my-35 w-full">
-            <label>List Name :</label>
+            <label>{t('list_name')} :</label>
             <InputName
               value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
-              placeholder="Enter List name"
+              placeholder={t('enter_list_name')}
             />
           </div>
 
@@ -198,7 +221,7 @@ export default function EditList() {
                   maxWidth: 300,
                 }}
               >
-                <label>Add Game</label>{' '}
+                <label>{t('add_game')}</label>{' '}
                 <ListSearchGameToAdd
                   listId={listId}
                   list={list}
@@ -224,7 +247,7 @@ export default function EditList() {
                     onChange={(e) => setDescription(e.target.value)}
                     showCount
                     maxLength={300}
-                    placeholder="Décrivez votre liste en quelques lignes."
+                    placeholder={t('describe_your_list_in_some_words') + '...'}
                     autoSize={{
                       minRows: 3,
                       maxRows: 5,
@@ -248,7 +271,7 @@ export default function EditList() {
                   }}
                 >
                   <div className="flex flex-col">
-                    <label>VISIBILITY</label>
+                    <label>{t('visibility')}</label>
                     <Radio.Group
                       defaultValue={isPublic ? 'public' : 'private'}
                       buttonStyle="solid"
@@ -258,18 +281,18 @@ export default function EditList() {
                         style={{ color: isPublic ? 'black' : 'white' }}
                         value="public"
                       >
-                        Public
+                        {t('public')}
                       </Radio.Button>
                       <Radio.Button
                         style={{ color: !isPublic ? 'black' : 'white' }}
                         value="private"
                       >
-                        Private
+                        {t('private')}
                       </Radio.Button>
                     </Radio.Group>
                   </div>
                   <div className="flex flex-col">
-                    <label>TYPE</label>
+                    <label>{t('type')}</label>
                     <Radio.Group
                       defaultValue={isRanked ? 'ranked' : 'classic'}
                       buttonStyle="solid"
@@ -279,13 +302,13 @@ export default function EditList() {
                         style={{ color: !isRanked ? 'black' : 'white' }}
                         value="classic"
                       >
-                        Classique
+                        {t('classic')}
                       </Radio.Button>
                       <Radio.Button
                         value="ranked"
                         style={{ color: isRanked ? 'black' : 'white' }}
                       >
-                        Ordonnée
+                        {t('top')}
                       </Radio.Button>
                     </Radio.Group>
                   </div>
@@ -300,7 +323,7 @@ export default function EditList() {
                   }}
                   className=" text-white p-2 mx-2 border-none hover:cursor-pointer bg-[#FDC500] hover:bg-[#FFD12E] btn-save-list"
                 >
-                  SAVE LIST{' '}
+                  {t('save_list').toUpperCase()}{' '}
                 </button>{' '}
                 <div className="flex flex-row w-full ">
                   <PopUpDeleteList listId={listId} navigate={navigate} />
@@ -313,7 +336,7 @@ export default function EditList() {
                     }}
                     className=" text-white p-2 mx-2 border-none hover:cursor-pointer flex-1 btn-view-list"
                   >
-                    VIEW LIST{' '}
+                    {t('view_list').toUpperCase()}{' '}
                   </Link>{' '}
                 </div>
               </div>
@@ -328,7 +351,7 @@ export default function EditList() {
           </div>
         </div>
       ) : (
-        <div>Aucune liste trouvée.</div>
+        <ErrorOccured />
       )}
     </PageWrapper>
   )

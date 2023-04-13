@@ -1,0 +1,90 @@
+$color-secondary: #274851;
+$color-highlight: #d3e9e6;
+$color-faded: #3d7f7d;
+$color-glow: #3bcb86;
+$screen-background:#121010;
+@mixin primary-glow($spread) {
+	box-shadow: 0 0 2px 0px #fff,
+	0 0 #{$spread}px 0px $color-glow;
+}
+
+@mixin primary-text-glow($spread) {
+	text-shadow: 0 0 2px #fff,
+	0 0 #{$spread}px $color-glow;
+}
+
+@mixin secondary-glow {
+	// box-shadow: 0 0 10px 0px $color-secondary, 0 0 10px 0px $color-secondary inset;
+}
+
+
+@mixin flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.error-wrapper {
+	background-color: #000;
+	margin: 0;
+
+	&::after {
+		content: " ";
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background: transparentize($screen-background, 0.9);
+		opacity: 0;
+		z-index: 2;
+		pointer-events: none;
+		animation: flicker 0.15s infinite;
+	}
+	// scanlines
+	&::before {
+		content: " ";
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background: linear-gradient(transparentize($screen-background, 1) 50%, transparentize(darken($screen-background, 10), 0.75) 50%), linear-gradient(90deg, transparentize(#ff0000, 0.94), transparentize(#00ff00, 0.98), transparentize(#0000ff, 0.94));
+		z-index: 2;
+		background-size: 100% 2px, 3px 100%;
+		pointer-events: none;
+	}
+}
+
+.codec {
+	left: 0;
+	// top: 15%;
+	width: 100%;
+	height: 100%;
+	// border: 4px solid $color-secondary;
+	@include secondary-glow;
+	& > .left,
+	& > .center,
+	& > .right {
+		float: left;
+		width: 33.33%;
+		height: 100%;
+	}
+}
+
+
+
+
+
+
+@keyframes flicker {
+	$steps: 50;
+	@for $i from 0 through $steps {
+		#{percentage($i*(1/$steps))} {
+      z-index: 500;
+			opacity: random();
+		}
+	}
+}

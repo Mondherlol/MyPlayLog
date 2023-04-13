@@ -1,7 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import styled from 'styled-components'
-import { useState } from 'react'
 import PopRemoveGame from './PopRemoveGame'
 const defaultPicture =
   'https://images.igdb.com/igdb/image/upload/t_cover_big/nocover.png'
@@ -67,8 +66,6 @@ const Rank = styled.div`
 `
 
 export function SortableGame(props) {
-  const [isLoadedImage, setIsLoadedImage] = useState(false)
-
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: props.id })
 
@@ -91,12 +88,8 @@ export function SortableGame(props) {
       {...attributes}
       {...listeners}
     >
-      <StyledCard className={isLoadedImage ? '' : 'loading h-48'}>
-        <img
-          onLoad={() => setIsLoadedImage(true)}
-          src={getCover()}
-          alt={props.game.slug}
-        />
+      <StyledCard>
+        <img src={getCover()} alt={props.game.slug} />
         <StyledName>{props.game.name}</StyledName>
         {props.list.ranked && (
           <Rank>

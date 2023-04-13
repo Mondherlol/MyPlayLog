@@ -1,16 +1,18 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import poster from '../../assets/images/poster.png'
 import { Button, Modal, Radio } from 'antd'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import filterIcon from '../../assets/icons/filter.png'
 import './search.css'
 import colors from '../../utils/style/colors'
 import ElementList from './FilterElements'
 import filterTable from '../../utils/data/Filters'
+import GameCard from '../../components/GameCard/GameCard'
+import ErrorOccured from '../../components/ErrorOccured/ErrorOccured'
+import GameCardPlaceholder from '../../components/GameCard/GameCardPlaceholder'
 
 const All = {
   marginLeft: '1%',
@@ -20,7 +22,7 @@ const All = {
 }
 // #110f32
 
-export default function Search({ searchValue, setSearchValue }) {
+export default function Search({ searchValue, setSearchValue, setSearchType }) {
   const [data, setData] = useState([])
   const [open, setOpen] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
@@ -29,9 +31,12 @@ export default function Search({ searchValue, setSearchValue }) {
   const [searchRadioValue, setSearchRadioValue] = useState(1)
   const [NotEmptyResults, setNotEmptyResults] = useState(true)
   const [isLargeScreen, setIsLargeScreen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
+  document.title = t('explore') + ' - MyPlayLog'
 
   //jib data ml link
   const getDataFromLink = () => {
@@ -68,20 +73,40 @@ export default function Search({ searchValue, setSearchValue }) {
     // params ml link
     const searchParams = new URLSearchParams(location.search)
     const q = searchParams.get('q')
+    if (q) {
+      setSearchValue(q)
+      setSearchType('game')
+    }
     //n3abi lfilters ml link
     var filterss = []
     for (const [key, value] of searchParams.entries()) {
       if (key !== 'q') {
         var allvals = value.split(',')
         allvals.forEach((v) => {
-          filterss.push(key + '=' + v)
+          const typeFilter = filterTable.find((item) => item.name === key) //On récupere le tableau de filtre correspondant
+          const objectFilter = typeFilter.elements.find(
+            (item) => item.id === parseInt(v) //On récupere le filtre actif
+          )
+          const name =
+            key === 'platforms'
+              ? objectFilter.abbreviation
+                ? objectFilter.abbreviation
+                : objectFilter.name
+              : t(objectFilter.slug ? objectFilter.slug : objectFilter.name) //On traduit le nom du filtre
+
+          filterss.push({
+            value: key + '=' + v,
+            name: name,
+          })
         })
       }
     }
     setFilters([...filterss])
+    setIsLoading(true)
+
     axios
       .get(
-        `${process.env.REACT_APP_IP_ADRESS}/api/games/searchs` +
+        `${process.env.REACT_APP_IP_ADRESS}/api/games/search` +
           location.search.toString()
       )
       .then((res) => {
@@ -89,20 +114,19 @@ export default function Search({ searchValue, setSearchValue }) {
           setNotEmptyResults(false)
         } else {
           setNotEmptyResults(true)
-          if (q) {
-            setSearchValue(q)
-          }
-
           setData(res.data)
         }
       })
       .catch((err) => {
-        console.log('filtre:' + err)
+        console.log(err)
+        setError(err)
       })
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
     getDataFromLink()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   //n3rf ena fil mobile wela web
@@ -144,7 +168,8 @@ export default function Search({ searchValue, setSearchValue }) {
       charLink = '?q=' + searchValue
     }
     var filteredTab = []
-    filters.forEach((v) => {
+    filters.forEach((filter) => {
+      const v = filter.value
       var type = v.split('=')[0]
       if (!filteredTab.some((item) => item.name === type)) {
         filteredTab.push({ name: type, elements: [v.split('=')[1]] })
@@ -193,89 +218,91 @@ export default function Search({ searchValue, setSearchValue }) {
 
   return (
     <div
-      className="mt-[20%] sm:mt-[15%] lg:mt-[10%] xl:mt-[7%] mb-[10vh] lg:mb-0"
+      className="mt-[20%] sm:mt-[15%] lg:mt-[10%] xl:mt-[7%] mb-[10vh] lg:mb-10  "
       style={All}
     >
       <div
         className="container mx-auto "
         style={{ backgroundColor: 'transparent' }}
       >
-        {/* filters div web    #0d0b29*/}
+        {/* filters div web   */}
         <div
-          className="hidden lg:block box-content rounded-lg"
+          className="hidden lg:flex flex-col gap-1 box-content rounded-lg  sticky top-20 bg-red-50 "
           style={{
             backgroundColor: 'transparent',
             width: '20%',
             float: 'left',
+            height: '85vh',
           }}
         >
-          {filterTable.map((ele) => {
-            return (
-              <div
-                className="mx-auto w-11/12  mt-2 mb-2 rounded-lg"
-                style={{ backgroundColor: '#08071B' }}
-                key={ele.name}
-              >
-                <h2
-                  className="ml-4 pt-1 text-sm 2xl:text-xl"
-                  style={{ color: `${colors.primary}` }}
-                >
-                  {t(ele.name).toUpperCase()}
-                </h2>
-                <div className="ml-3 mt-2">
-                  <ElementList
-                    filters={filters}
-                    setFilters={setFilters}
-                    elementName={ele.name}
-                    elements={ele.elements}
-                  />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-        {/* searchbar+games div */}
-        <div className="w-full h-10 ">
-          <Button
-            type="button"
-            className=" font-bold float-right mr-2 rounded-3xl pl-4 pr-4 hidden lg:block "
-            style={{ backgroundColor: `${colors.primary}`, fontSize: '15px' }}
-            onClick={handleOk}
+          <div
+            className="hidden lg:block box-content rounded-lg  overflow-y-auto  scrollbar-thumb-yellow-500 scrollbar-thin scrollbar-rounded-[50px] "
+            style={{
+              height: '80vh',
+            }}
           >
-            <img
-              src={filterIcon}
-              height="15"
-              alt="filter icon"
-              className="pt-[2px] mr-[6px]"
-            />
-            Apply Filter
-          </Button>
-        </div>
-        {/* style={{backgroundColor:`${colors.background}`}} */}
-        <div
-          className=" w-full h-full bg-cyan-500 lg:w-4/5 lg:float-right overflow-y-scroll scrollbar-thumb-yellow-500 scrollbar-thin scrollbar-rounded-[50px]   "
-          style={{ backgroundColor: 'transparent', height: '97vh' }}
-        >
-          {/* filter modal */}
-          {/* <div className='w-full h-10 '>
-                <Button type="button" className=' font-bold float-right mr-2 rounded-2xl pl-4 pr-4  lg:hidden ' style={{backgroundColor:`${colors.primary}`,fontSize:'1rem'}} onClick={showModal}>
-                    <img src={filterIcon} height="15" alt="filter icon" className='pt-[5px] mr-[6px]'  />  Filter
-                </Button>
-                </div> */}
-          <div className=" flex flex-col items-center">
+            <div className="relative pb-1 ">
+              {filterTable.map((ele) => {
+                return (
+                  <div
+                    className="mx-auto w-11/12  mt-2 mb-2 rounded-lg"
+                    style={{ backgroundColor: '#08071B' }}
+                    key={ele.name}
+                  >
+                    <h2
+                      className="ml-4 pt-1 text-sm 2xl:text-xl"
+                      style={{ color: `${colors.primary}` }}
+                    >
+                      {t(ele.name).toUpperCase()}
+                    </h2>
+                    <div className="ml-3 mt-2">
+                      <ElementList
+                        filters={filters}
+                        setFilters={setFilters}
+                        elementName={ele.name}
+                        elements={ele.elements}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+          <div className="flex justify-center items-center w-full   relative ">
             <Button
               type="button"
-              className=" font-bold  mr-2 rounded-2xl pl-5 pr-5  shadow-2xl  fixed bottom-[70px] sm:bottom-[20px] text-center lg:hidden"
-              style={{ backgroundColor: `${colors.primary}`, fontSize: '1rem' }}
-              onClick={showModal}
+              className=" font-bold float-right rounded-3xl pl-4 pr-4 hidden lg:block  "
+              style={{
+                backgroundColor: `${colors.primary}`,
+                fontSize: '15px',
+              }}
+              onClick={handleOk}
             >
               <img
                 src={filterIcon}
                 height="15"
                 alt="filter icon"
-                className="pt-[5px] mr-[6px]"
-              />{' '}
-              Filter
+                className="pt-[2px] mr-1"
+              />
+              {t('apply_filter')}{' '}
+              {filters.length !== 0 && `(${filters.length})`}
+            </Button>
+          </div>
+        </div>
+        {/* style={{backgroundColor:`${colors.background}`}} */}
+        <div
+          className=" w-full h-full bg-cyan-500 lg:w-4/5 lg:float-right   "
+          style={{ backgroundColor: 'transparent' }}
+        >
+          <div className=" flex flex-col items-center">
+            <Button
+              type="button"
+              className="  font-bold rounded-2xl px-5 p-2 flex flex-row justify-center items-center gap-1  z-10  shadow-2xl  fixed bottom-[70px] sm:bottom-[20px] text-center lg:hidden"
+              style={{ backgroundColor: `${colors.primary}`, fontSize: '1rem' }}
+              onClick={showModal}
+            >
+              <img src={filterIcon} height="15" alt="filter icon" />{' '}
+              {t('filters')} {filters.length !== 0 && `(${filters.length})`}
             </Button>
           </div>
 
@@ -293,7 +320,8 @@ export default function Search({ searchValue, setSearchValue }) {
               },
             }}
             cancelButtonProps={{ style: { fontWeight: 'bold' } }}
-            okText="Apply Filter"
+            okText={t('apply_filter')}
+            cancelText={t('cancel')}
           >
             {showSearchRadio && (
               <Radio.Group
@@ -305,7 +333,7 @@ export default function Search({ searchValue, setSearchValue }) {
                   {searchValue}
                 </Radio>
                 <Radio value={0} style={{ color: 'white' }}>
-                  All
+                  {t('all')}
                 </Radio>
               </Radio.Group>
             )}
@@ -313,7 +341,9 @@ export default function Search({ searchValue, setSearchValue }) {
             {filterTable.map((ele) => {
               return (
                 <div key={ele.name}>
-                  <h2 style={{ color: `${colors.primary}` }}>{t(ele.name)}</h2>
+                  <h2 style={{ color: `${colors.primary}` }}>
+                    {t(ele.name).toUpperCase()}
+                  </h2>
                   <ElementList
                     filters={filters}
                     setFilters={setFilters}
@@ -324,40 +354,65 @@ export default function Search({ searchValue, setSearchValue }) {
               )
             })}
           </Modal>
-          {/* filter badges */}
 
-          {/* all games cards */}
-          {NotEmptyResults && (
-            <div className="ml-4 grid grid-cols-2 gap-y-3 gap-x-[0px] sm:grid-cols-3 lg:grid-cols-4 lg:ml-3 xl:grid-cols-5 2xl:grid-cols-6">
-              {data.map((game) => {
-                var url = game.cover ? game.cover.url : poster
-                url = url.replace('t_thumb', 't_cover_big')
-                var gamePage = '/game/' + game.slug
-
+          {filters && filters.length !== 0 && (
+            <div className="ml-2  md:ml-8 flex flex-row flex-wrap overflow-hidden justify-start items-end gap-2">
+              <h2>{t('filters')} : </h2>
+              {filters.map((filter) => {
                 return (
-                  <>
-                    <div
-                      key={game.id}
-                      className="h-[230px] w-[170px] loading"
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {' '}
-                      <Link to={gamePage}>
-                        <img
-                          className="rounded-lg h-full w-full "
-                          style={{ objectFit: 'cover' }}
-                          src={url}
-                          alt="game"
-                        />{' '}
-                      </Link>
-                    </div>
-                  </>
+                  <button
+                    key={`active filter ${filter.name}`}
+                    onClick={() => {
+                      const filterRemoved = filters.filter(
+                        (item) => item.value !== filter.value
+                      )
+                      setFilters(filterRemoved)
+                    }}
+                    className="p-2 rounded-md  cursor-pointer  border-none "
+                    style={{
+                      background: colors.primary,
+                      color: colors.background,
+                    }}
+                  >
+                    {filter.name} ✖
+                  </button>
                 )
               })}
+              <button
+                onClick={() => setFilters([])}
+                className="p-2 rounded-md  border-none cursor-pointer text-white  "
+                style={{
+                  backgroundColor: colors.danger,
+                }}
+              >
+                {t('clear_filters')}{' '}
+              </button>
             </div>
           )}
-          {!NotEmptyResults && (
-            <h1 style={{ textAlign: 'center' }}>no results</h1>
+
+          {/* all games cards */}
+
+          {error !== null && <ErrorOccured />}
+          <div className=" ml-4  lg:ml-3 flex flex-row flex-wrap overflow-hidden justify-center   ">
+            {isLoading && (
+              <>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <GameCardPlaceholder key={`placeholder ${index}`} />
+                ))}
+              </>
+            )}
+          </div>
+          {/* <div className="ml-4 grid grid-cols-2 gap-y-3 gap-x-[0px] sm:grid-cols-3 lg:grid-cols-4 lg:ml-3 xl:grid-cols-5 2xl:grid-cols-6"> */}
+          <div className=" ml-4  lg:ml-3 flex flex-row flex-wrap overflow-hidden justify-center  pb-8 ">
+            {!isLoading &&
+              NotEmptyResults &&
+              data.map((game) => {
+                return <GameCard key={game.id} game={game} />
+              })}
+          </div>
+          {/* {<button>Load more</button>} */}
+          {!isLoading && !NotEmptyResults && (
+            <h1 style={{ textAlign: 'center' }}>{t('no_result')}</h1>
           )}
         </div>
       </div>

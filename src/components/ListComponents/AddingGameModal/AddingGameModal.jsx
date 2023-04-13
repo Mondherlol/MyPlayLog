@@ -1,15 +1,19 @@
 import { Modal } from 'antd'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Checkbox } from 'antd'
-import colors from '../../../utils/style/colors'
 import LoadingBar from 'react-top-loading-bar'
-
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+
+import { LoginData } from '../../../Helper/Context'
+import colors from '../../../utils/style/colors'
 import CreateListModal from '../CreateListModal/CreateListModal'
 import './AddingGame.css'
 
 import AddingGameFilter from './AddingGameFilter'
 import PopUpConfirm from './PopUpConfirm'
+import { useTranslation } from 'react-i18next'
 
 export default function AddingGameModal({
   isModalOpen,
@@ -21,6 +25,9 @@ export default function AddingGameModal({
   const [listsIds, setListsIds] = useState([])
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isConfirmCloseModalOpen, setIsConfirmCloseModalOpen] = useState(false)
+  const { loginData } = useContext(LoginData)
+  const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const [progress, setProgress] = useState(0)
   const [idListForRemoveGame, setIdListForRemoveGame] = useState([])
@@ -28,10 +35,14 @@ export default function AddingGameModal({
 
   useEffect(() => {
     if (isModalOpen) {
-      setProgress(5)
-      getLists()
-      setListsIds([])
-      setIdListForRemoveGame([])
+      if (loginData) {
+        setProgress(5)
+        getLists()
+        setListsIds([])
+        setIdListForRemoveGame([])
+      } else {
+        navigate('/login')
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen])
@@ -39,8 +50,11 @@ export default function AddingGameModal({
   const getLists = () => {
     setProgress(10)
     axios
-      .get(`${process.env.REACT_APP_IP_ADRESS}/api/lists/withGame/${gameId}`)
+      .get(`${process.env.REACT_APP_IP_ADRESS}/api/lists/withGame/${gameId}`, {
+        withCredentials: true,
+      })
       .then((res) => {
+        console.log(res.data)
         setLists(res.data.lists)
         setFilteredLists(res.data.lists)
         res.data.lists.forEach((list) => {
@@ -68,18 +82,32 @@ export default function AddingGameModal({
     setProgress(20)
     const data = { id_IGDB: gameId.toString() }
     const ids = listsIds.join(',')
-    if (ids !== undefined) {
+    if (ids !== undefined && ids !== '') {
       const config = {
         method: 'post',
-        url: `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/game?ids=${ids}`,
+        withCredentials: true,
+        url: `${process.env.REACT_APP_IP_ADRESS}/api/lists/game?ids=${ids}`,
         headers: {
           'Content-Type': 'application/json',
         },
         data: { ...data },
       }
       axios(config)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
+        .then((res) => {
+          toast.success(t('games_added_with_success'), {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            theme: 'dark',
+            autoClose: 3000,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+          toast.error(err.message, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            theme: 'dark',
+            autoClose: 3000,
+          })
+        })
         .finally(() => setProgress(100))
     }
   }
@@ -101,14 +129,28 @@ export default function AddingGameModal({
     ) {
       const config = {
         method: 'delete',
-        url: `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/remove/${gameId}?listIds=${idsToRemove}`,
+        url: `${process.env.REACT_APP_IP_ADRESS}/api/lists/remove/${gameId}?listIds=${idsToRemove}`,
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
         },
       }
       axios(config)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
+        .then((res) => {
+          toast.success(t('games_removed_with_success'), {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            theme: 'dark',
+            autoClose: 3000,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+          toast.error(err.message, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            theme: 'dark',
+            autoClose: 3000,
+          })
+        })
         .finally(() => setProgress(100))
     }
   }
@@ -147,8 +189,6 @@ export default function AddingGameModal({
 
   // Si l'utilisateur crée une liste on l'ajoute à ses listes
   useEffect(() => {
-    console.log('List Created')
-    console.log(listCreated)
     if (listCreated !== null && !lists.includes(listCreated)) {
       setLists((prevLists) => [listCreated, ...prevLists])
       setFilteredLists((prevLists) => [listCreated, ...prevLists])
@@ -164,6 +204,7 @@ export default function AddingGameModal({
       open={isModalOpen}
       className="addingGameStyle"
       onCancel={handleCancel}
+      style={{ top: 20 }}
       footer={[
         <button
           className="btn-delete-list p-2 mx-2 rounded-xl text-white border-none cursor-pointer"

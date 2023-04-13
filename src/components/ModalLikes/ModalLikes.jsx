@@ -1,7 +1,7 @@
 import { Modal } from 'antd'
 import { Link } from 'react-router-dom'
 
-export default function ModalLikes({ likes, isModalOpen, setIsModalOpen }) {
+export default function ModalLikes({ likers, isModalOpen, setIsModalOpen }) {
   const handleOk = () => {
     setIsModalOpen(false)
   }
@@ -16,14 +16,14 @@ export default function ModalLikes({ likes, isModalOpen, setIsModalOpen }) {
       onCancel={handleCancel}
     >
       <div className="w-full flex flex-col overflow-y-auto h-72">
-        {likes.map((like) => {
+        {likers.map((liker) => {
           return (
             <Link
               className="w-full p-4 border-solid border-gray-700 rounded-lg"
-              to="/"
-              key={like._id}
+              to={`/user/${liker._id}`}
+              key={liker._id}
             >
-              {like.idUser}{' '}
+              {liker.username}{' '}
             </Link>
           )
         })}

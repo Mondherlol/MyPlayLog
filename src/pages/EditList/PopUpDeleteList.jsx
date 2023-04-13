@@ -1,29 +1,48 @@
 import { Modal } from 'antd'
 import colors from '../../utils/style/colors'
 import axios from 'axios'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
 const { confirm } = Modal
 
 const PopUpDeleteList = ({ listId, navigate }) => {
+  const { t } = useTranslation()
   const deleteList = () => {
     axios
-      .delete(`${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`)
-      .then((res) => navigate('/lists'))
-      .catch((err) => console.log(err))
+      .delete(`${process.env.REACT_APP_IP_ADRESS}/api/lists/${listId}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        toast.success(t('list_deleted_with_success'), {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+          autoClose: 1500,
+        })
+        navigate('/lists')
+      })
+      .catch((err) => {
+        console.log(err)
+        toast.error(err.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+        })
+      })
   }
 
   const showDeleteConfirm = () => {
     confirm({
-      title: 'Are you sure to delete this list?',
+      title: `${t('are_you_sure_to_delete_this_list')} ?`,
       content: (
         <p style={{ fontFamily: 'Inter' }}>
-          This action is{' '}
+          {t('this_action_is')}{' '}
           <span style={{ color: colors.danger, fontWeight: 500 }}>
             {' '}
-            irreversible.{' '}
+            {t('irreversible')}.{' '}
           </span>
         </p>
       ),
-      okText: 'Yes',
+      okText: t('yes'),
       okType: 'danger',
       okButtonProps: {
         style: {
@@ -32,7 +51,7 @@ const PopUpDeleteList = ({ listId, navigate }) => {
           color: 'white',
         },
       },
-      cancelText: 'No',
+      cancelText: t('no'),
       onOk() {
         deleteList()
       },
@@ -49,7 +68,7 @@ const PopUpDeleteList = ({ listId, navigate }) => {
       onClick={showDeleteConfirm}
       type="dashed"
     >
-      DELETE{' '}
+      {t('delete').toUpperCase()}{' '}
     </button>
   )
 }

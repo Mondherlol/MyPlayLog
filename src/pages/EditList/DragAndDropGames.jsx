@@ -7,7 +7,6 @@ import {
   MouseSensor,
 } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
-import { useEffect } from 'react'
 import { SortableGame } from './SortableGame'
 
 export default function DragAndDropGames({ list, setList, setProgress }) {
@@ -17,20 +16,14 @@ export default function DragAndDropGames({ list, setList, setProgress }) {
         distance: 8,
       },
     }),
-    useSensor(TouchSensor)
+    useSensor(TouchSensor, {
+      // Press delay of 250ms, with tolerance of 5px of movement
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
   )
-
-  // useEffect(() => {
-  //   setList((list) => ({
-  //     ...list,
-  //     games: list.games.map((game, index) => ({ ...game, id: index })),
-  //   }))
-  // }, [])
-
-  // useEffect(() => {
-  //   console.log('list changed !')
-  //   console.log(list)
-  // }, [list])
 
   return (
     <DndContext

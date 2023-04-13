@@ -1,7 +1,9 @@
 import React from 'react'
-import { Button, Checkbox } from 'antd'
+import { Checkbox } from 'antd'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import colors from '../../utils/style/colors'
 
 var tabchecked = []
 
@@ -13,24 +15,42 @@ export default function FilterElements({
 }) {
   const { t } = useTranslation()
   useEffect(() => {
+    // const stock = filters.map((filter) => {
+    //   const [key, value] = filter.value.split('=')
+    //   const name = elements.find((e) => e.id.toString() === value)?.name || ''
+    //   return { value: filter.value, name }
+    // })
+    // console.log('stock')
+    // console.log(stock)
+  }, [])
+  useEffect(() => {
+    // console.log(filters);
     tabchecked = [...filters]
   }, [filters])
+
   const [showElements, setShowElements] = useState(false)
 
-  const onChangeChecked = (checkedValues) => {
-    console.log('checked = ', checkedValues)
+  const onChangeChecked = (checkedValues, name) => {
+    console.log('checked = ', checkedValues.target.value)
     if (checkedValues.target.checked) {
-      if (tabchecked.indexOf(checkedValues.target.value) === -1) {
-        tabchecked.push(checkedValues.target.value)
+      if (
+        tabchecked.findIndex(
+          (filter) => filter.value === checkedValues.target.value
+        ) === -1
+      ) {
+        tabchecked.push({ value: checkedValues.target.value, name: name })
         setFilters([...tabchecked])
       }
     } else {
-      const index = tabchecked.indexOf(checkedValues.target.value)
+      const index = tabchecked.findIndex(
+        (filter) => filter.value === checkedValues.target.value
+      )
       if (index > -1) {
         tabchecked.splice(index, 1)
       }
       setFilters([...tabchecked])
     }
+    console.log(tabchecked)
   }
 
   return (
@@ -41,24 +61,40 @@ export default function FilterElements({
             <Checkbox
               key={elementName + '=' + v.id}
               value={elementName + '=' + v.id}
-              checked={filters.includes(elementName + '=' + v.id)}
-              onChange={onChangeChecked}
+              checked={filters.some(
+                (filter) => filter.value === elementName + '=' + v.id
+              )}
+              onChange={(e) =>
+                onChangeChecked(
+                  e,
+                  elementName === 'platforms'
+                    ? v.abbreviation
+                      ? v.abbreviation
+                      : v.name
+                    : t(v.slug ? v.slug : v.name)
+                )
+              }
               className="text-white"
             >
-              {t(v.name)}
+              {elementName === 'platforms'
+                ? v.abbreviation
+                  ? v.abbreviation
+                  : v.name
+                : t(v.slug ? v.slug : v.name)}
             </Checkbox>{' '}
             <br />
           </div>
         )
       })}
       {elements.length > 5 && (
-        <Button
+        <button
           type="text"
-          className="bold text-blue-500"
+          className="bold   bg-transparent border-none cursor-pointer mb-2"
+          style={{ color: colors.primary }}
           onClick={() => setShowElements(!showElements)}
         >
-          {showElements ? 'Show Less <' : 'Show More >'}
-        </Button>
+          {showElements ? `${t('show_less')} -` : `${t('show_more')} ›`}
+        </button>
       )}
     </>
   )

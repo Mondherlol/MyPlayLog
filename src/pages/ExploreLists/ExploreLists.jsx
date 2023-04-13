@@ -1,8 +1,8 @@
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { Pagination, ConfigProvider } from 'antd'
 import axios from 'axios'
-import { useEffect, useState, useRef, useCallback } from 'react'
-import { useLocation, Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState, useCallback, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import LoadingBar from 'react-top-loading-bar'
 
 import colors from '../../utils/style/colors'
@@ -12,6 +12,9 @@ import SortingLists from './SortingLists'
 import filterIcon from '../../assets/icons/filter.png'
 import ListFIltersModal from '../../components/ListComponents/ListFilters/ListFIltersModal'
 import ListCard from './ListCard'
+import ListCardPlaceholder from './ListCardPlaceholder'
+import { useTranslation } from 'react-i18next'
+import { LoginContext } from '../../Helper/Context'
 
 const PageWrapper = styled.div`
   display: flex;
@@ -22,45 +25,6 @@ const PageWrapper = styled.div`
   align-items: start;
   min-height: 100vh;
 `
-const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-width: 260px;
-  width: 100%;
-  background-color: ${colors.backgroundDerivation};
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  transition: 0.1s;
-  &:hover {
-    transform: scale(1.01);
-    z-index: 1;
-  }
-
-  overflow: hidden;
-  box-shadow: inset 0 3px 15px 3px #0009;
-  position: relative;
-`
-
-const CoversContainer = styled.div`
-  // border-top-left-radius: 16px;
-  // border-top-right-radius: 16px;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100px;
-  background-color: rgb(83 81 126 / 21%);
-  overflow: hidden;
-  position: relative;
-`
-
-const Image = styled.img`
-  // width: 100px;
-  // height: 100px;
-  // object-fit: cover;
-  // flex-shrink: 0;
-  // box-shadow: inset 0 3px 15px 3px #0009;
-`
-
 function ExploreLists() {
   const location = useLocation()
   const [searchQuery, setSearchQuery] = useState(null)
@@ -78,6 +42,8 @@ function ExploreLists() {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false)
   const navigate = useNavigate()
   const [showFilterButton, setShowFilterButton] = useState(true)
+  const { t } = useTranslation()
+  const { loggedIn } = useContext(LoginContext)
 
   const handleScroll = useCallback(() => {
     if (
@@ -98,6 +64,8 @@ function ExploreLists() {
   }, [handleScroll])
 
   const getLists = () => {
+    document.title = t('lists') + ' - My PlayLog'
+
     setProgress(20)
     setIsLoading(true)
     let uri = `${
@@ -109,7 +77,7 @@ function ExploreLists() {
     }${sortQuery}
     `
     axios
-      .get(uri.trim())
+      .get(uri.trim(), { withCredentials: true })
       .then((res) => {
         console.log(res.data)
         setLists(res.data.lists)
@@ -196,7 +164,7 @@ function ExploreLists() {
             alt="filter icon"
             className="pt-[5px] mr-[6px]"
           />{' '}
-          Filter
+          {t('filter')}
         </button>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -217,7 +185,8 @@ function ExploreLists() {
           />
           <button
             onClick={() => {
-              setIsModalOpen(true)
+              if (loggedIn) setIsModalOpen(true)
+              else navigate('/login')
             }}
             style={{
               color: colors.backgroundDerivation,
@@ -226,7 +195,7 @@ function ExploreLists() {
             }}
             className=" text-white p-2 m-2 border-none hover:cursor-pointer "
           >
-            CREATE YOUR LIST{' '}
+            {t('create_your_list').toUpperCase()}
           </button>
         </div>
 
@@ -237,7 +206,9 @@ function ExploreLists() {
             } items-end w-full px-8`}
           >
             {totalLists !== 0 && (
-              <h3 className="font-normal p-2">{totalLists} résultats</h3>
+              <h3 className="font-normal p-2">
+                {totalLists} {t('results')}
+              </h3>
             )}
             <SortingLists
               setSortOrder={setSortOrder}
@@ -252,43 +223,7 @@ function ExploreLists() {
             {isLoading && (
               <>
                 {Array.from({ length: 6 }).map((_, index) => (
-                  <ListContainer key={index}>
-                    <CoversContainer>
-                      <div
-                        className="loading"
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          width: '100%',
-                          height: '100%',
-                        }}
-                      ></div>
-                    </CoversContainer>
-                    <div
-                      style={{ display: 'flex', flexDirection: 'column', p: 2 }}
-                    >
-                      <div style={{ padding: '20px 30px' }}>
-                        <h2
-                          className="loading mb-4"
-                          style={{
-                            width: 300,
-                            height: 30,
-                            background: 'rgb(83 81 126 / 21%)',
-                          }}
-                        >
-                          {' '}
-                        </h2>
-                        <p
-                          className="loading"
-                          style={{
-                            height: 50,
-                            background: 'rgb(83 81 126 / 21%)',
-                          }}
-                        ></p>
-                      </div>
-                    </div>
-                  </ListContainer>
+                  <ListCardPlaceholder key={'list + ' + index} />
                 ))}
               </>
             )}
@@ -300,7 +235,7 @@ function ExploreLists() {
                   textAlign: 'center',
                 }}
               >
-                Aucun résultat.
+                {t('no_result')}.
               </h2>
             )}{' '}
             {!isLoading &&

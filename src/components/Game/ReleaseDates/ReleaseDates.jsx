@@ -71,7 +71,20 @@ function ReleaseDates({ releaseDates }) {
       }
 
       if (release.region !== 7) {
-        const date = release.human !== 'TBD' ? new Date(release.human) : 'TBD'
+        let date
+        if (release.human === 'TBD') {
+          date = 'TBD'
+        } else {
+          const regex = /^(Q[1-4]) (\d{4})$/
+          const match = release.human.match(regex)
+          if (match) {
+            const quarter = match[1]
+            const year = match[2]
+            date = new Date(Date.parse(`${quarter} ${year}`))
+          } else {
+            date = new Date(release.human)
+          }
+        }
         updatedReleases[consoleIndex].releases.push({
           region: release.region,
           date,
@@ -92,7 +105,7 @@ function ReleaseDates({ releaseDates }) {
   }, [releaseDates])
   return (
     <div className="w-full  flex-col flex justify-center items-center   text-center  p-4">
-      <StyledTitle className="  border-b-4 w-fit    border-0  border-solid  ">
+      <StyledTitle className="  border-b-4 w-fit    border-0  border-soli d  ">
         {t('release_dates')}
       </StyledTitle>
       <div>
@@ -110,7 +123,7 @@ function ReleaseDates({ releaseDates }) {
                   />
                 )}
                 {/* //La date est localisée selon la traduction de la page. */}
-                {release.releases[0].date !== 'TBD'
+                {!isNaN(release.releases[0].date)
                   ? new Intl.DateTimeFormat(i18next.language, {
                       year: 'numeric',
                       month: 'short',
@@ -162,7 +175,7 @@ function ReleaseDates({ releaseDates }) {
                           </div>
                         )}
 
-                        {currentRelease.data !== 'TBD'
+                        {!isNaN(currentRelease.date)
                           ? new Intl.DateTimeFormat(i18next.language, {
                               year: 'numeric',
                               month: 'short',

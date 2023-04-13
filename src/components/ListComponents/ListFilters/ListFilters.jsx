@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Input, Radio, ConfigProvider, Space } from 'antd'
 import styled from 'styled-components'
 import colors from '../../../utils/style/colors'
+import { useTranslation } from 'react-i18next'
 
 const { Search } = Input
 
@@ -18,6 +19,7 @@ export default function ListFilters({ query, ranked, sortQuery }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('all')
   const [filterChanged, setFilterChanged] = useState(false)
+  const { t } = useTranslation()
 
   //Mettre les filtres définis dans l'url (si y en a )
   useEffect(() => {
@@ -84,7 +86,7 @@ export default function ListFilters({ query, ranked, sortQuery }) {
             className="block font-bold mb-2"
             htmlFor="search"
           >
-            Rechercher
+            {t('search')}
           </label>
           <ConfigProvider
             theme={{
@@ -96,7 +98,7 @@ export default function ListFilters({ query, ranked, sortQuery }) {
             <Search
               id="search"
               type="text"
-              placeholder="Nom, tag ..."
+              placeholder={t('name_tag')}
               value={searchTerm}
               onChange={handleSearch}
               onSearch={handleSubmit}
@@ -111,7 +113,7 @@ export default function ListFilters({ query, ranked, sortQuery }) {
             className="block font-bold mb-2"
             htmlFor="search"
           >
-            Type
+            {t('type')}
           </label>
           <div className="mt-2">
             <ConfigProvider
@@ -126,9 +128,9 @@ export default function ListFilters({ query, ranked, sortQuery }) {
             >
               <Radio.Group onChange={handleFilterChange} value={filter}>
                 <Space direction="vertical">
-                  <Radio value="all">Tous</Radio>
-                  <Radio value="classic">Classiques</Radio>
-                  <Radio value="ranked">Ranked</Radio>
+                  <Radio value="all">{t('all')}</Radio>
+                  <Radio value="classic">{t('classic')}</Radio>
+                  <Radio value="ranked">{t('top')}</Radio>
                 </Space>
               </Radio.Group>
             </ConfigProvider>
@@ -139,7 +141,7 @@ export default function ListFilters({ query, ranked, sortQuery }) {
               style={{ backgroundColor: colors.danger }}
               className="text-white p-2 w-full mt-2 border-none rounded-md hover:cursor-pointer"
             >
-              Clear Filters
+              {t('clear_filters')}
             </button>
           </div>
         </div>

@@ -70,6 +70,17 @@
    "category_13": "a pack",
    "category_14": "an update",
 
+      
+   "categ_1":"DLC",
+   "categ_2":"Expansion",
+   "categ_4": "Standalone",
+   "categ_8": "Remake",
+   "categ_9": "Remaster",
+   "categ_10": "Expanded game",
+   "categ_11": "Port",
+   "categ_12": "Fork",
+
+
    "region_1": "Europe",
    "region_2": "North America",
    "region_3": "Australia",
@@ -196,7 +207,89 @@
    "players":"players",
    "critics":"critics",
    "critic_ratings":"Critic ratings",
-   "players_ratings":"Players ratings"
+   "players_ratings":"Players ratings",
+
+   "go_backwards":"Go backwards",
+
+   "popular":"Popular",
+   "trending":"Trending",
+   "upcoming":"Upcoming",
+   "selections_of_the":"Selections of the",
+   "month":"Month",
+   "games":"Games",
+
+   "create_new_list":"Create new list",
+   "name_your_list":"Name your list",
+   "visibility":"Visibility",
+   "public":"Public",
+   "private":"Private",
+   "type":"Type",
+   "classic":"Classic",
+   "top":"Top",
+   "add_tag":"Add tag",
+   "clear_tags":"Clear tags",
+   "cancel":"Cancel",
+   "create":"Create",
+   "describe_your_list_in_some_words":"Describe your list in some words",
+   "best_fighting_games":"Best fighting games",
+
+   "search":"Search",
+   "name_tag":"Name, tag ...",
+   "all":"All",
+   "clear_filters":"Clear filters",
+   "create_your_list":"Create your list",
+   "results":"results",
+   "last_update":"Last update",
+   "name":"Name",
+   "sort_likes":"Likes",
+   "no_result":"No result",
+   "filter":"Filter",
+
+   "likes":"likes",
+   "list_from":"From",
+   "follow":"Follow",
+   "edit":"Edit",
+   "delete":"Delete",
+   "list_viewed":" {{view}} views",
+   "comments":"Comments",
+   "created":"Created",
+   "last_update_list":"Last update",
+
+   "date_added":"Date added",
+   "release_date":"Release date",
+   "rating":"Rating",
+   "sort_rank":"Rank",
+
+   "yes":"Yes",
+   "no":"No",
+   "are_you_sure_to_delete_this_list":"Are you sure to delete this list ",
+   "this_action_is":"This action is",
+   "irreversible":"irreversible",
+
+   "list_name":"List name",
+   "add_game":"Add game",
+   "description":"Description",
+   "save_list":"Save list",
+   "view_list":"View list",
+   "new_tag":"New Tag",
+   "search_any_game":"Search any game",
+   "enter_list_name":"Enter list name",
+
+   "remove_this_game":"Remove this game",
+   "apply_filter":"Apply filters",
+   "filters":"Filters",
+
+   "list_deleted_with_success":"List deleted with success.",
+   "game_already_in_list":"Game already in list.",
+   "list_updated_with_success":"List updated with success.",
+   "games_added_with_success":"Game added with success.",
+   "games_removed_with_success":"Game removed with success."
+
+
+   
+
+
+
 
 
 

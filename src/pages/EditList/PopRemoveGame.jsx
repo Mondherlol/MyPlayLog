@@ -1,9 +1,9 @@
 import { Popconfirm } from 'antd'
 import styled from 'styled-components'
 import axios from 'axios'
-import { useState } from 'react'
 import colors from '../../utils/style/colors'
-import LoadingBar from 'react-top-loading-bar'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 const Delete = styled.button`
   border: none;
@@ -27,14 +27,15 @@ const Delete = styled.button`
 `
 
 const PopRemoveGame = ({ gameId, setList, list, setProgress }) => {
+  const { t } = useTranslation()
   const confirm = () => {
     setProgress(20)
     axios
       .delete(
-        `${process.env.REACT_APP_IP_ADRESS}/api/lists/${list._id}/${gameId}`
+        `${process.env.REACT_APP_IP_ADRESS}/api/lists/${list._id}/${gameId}`,
+        { withCredentials: true }
       )
       .then((res) => {
-        setProgress(100)
         // obtenir l'index du jeu à supprimer
         const gameIndex = list.games.findIndex((game) => game.id === gameId)
 
@@ -50,24 +51,31 @@ const PopRemoveGame = ({ gameId, setList, list, setProgress }) => {
           games: updatedGames,
         }))
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        toast.error(err.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+        })
+      })
+      .finally(() => setProgress(100))
   }
   return (
     <>
       <Popconfirm
         placement="bottom"
-        title={`Remove this game ?`}
+        title={`${t('remove_this_game')}?`}
         onConfirm={confirm}
-        okText="Yes"
+        okText={t('yes')}
         okButtonProps={{
           style: {
             backgroundColor: colors.danger,
           },
         }}
-        cancelText="No"
+        cancelText={t('no')}
       >
         <Delete>
-          <h5>DELETE</h5>
+          <h5>{t('delete').toUpperCase()}</h5>
         </Delete>
       </Popconfirm>
     </>

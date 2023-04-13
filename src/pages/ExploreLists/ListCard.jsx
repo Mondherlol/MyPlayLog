@@ -1,15 +1,16 @@
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import { Link } from 'react-router-dom'
 
 import colors from '../../utils/style/colors'
+import { useTranslation } from 'react-i18next'
 
 const scroll = keyframes`
   0% {
     transform: translateX(0%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-150%);
   }
   200% {
     transform: translateX(0%);
@@ -17,6 +18,8 @@ const scroll = keyframes`
 `
 const ListContainer = styled.div`
   display: flex;
+  min-height: 200px;
+
   flex-direction: column;
   min-width: 260px;
   width: 100%;
@@ -26,11 +29,16 @@ const ListContainer = styled.div`
   transition: 0.1s;
   &:hover {
     transform: scale(1.01);
-    z-index: 1;
+    // z-index: 1;
   }
   &:hover img {
-    animation: ${scroll} 5s linear infinite;
-    animation-direction: alternate;
+    ${(props) =>
+      props.gamesLength > 4
+        ? css`
+            animation: ${scroll} ${props.gamesLength + 2}s linear infinite;
+            animation-direction: alternate;
+          `
+        : ''}
   }
   overflow: hidden;
   box-shadow: inset 0 3px 15px 3px #0009;
@@ -60,10 +68,12 @@ const Shadow = styled.div`
   box-shadow: inset 0 3px 15px 3px #0009;
 `
 export default function ListCard({ list }) {
+  const gamesLength = list.games ? list.games.length : 0
+  const { t } = useTranslation()
   return (
-    <ListContainer key={list._id}>
+    <ListContainer gamesLength={gamesLength}>
       <Link className="text-white hover:text-white" to={`/list/${list._id}`}>
-        <Shadow className="absolute w-full h-full  z-10" />
+        <Shadow className="absolute w-full h-full" style={{ zIndex: 1 }} />
         <CoversContainer>
           {list.games.map((game) => {
             return (
@@ -95,18 +105,18 @@ export default function ListCard({ list }) {
           <p className="  overflow-hidden text-ellipsis whitespace-nowrap py-2 ">
             {list.description}
           </p>
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2  w-10/12 justify-start flex-nowrap  overflow-hidden">
             {list.tags.map((tag) => {
               return (
                 <h5
-                  className="border-solid border-2 rounded-xl border-white p-1 px-2"
+                  className="border-solid border-2 rounded-xl border-white  whitespace-nowrap p-1 px-2"
                   key={tag._id}
                 >
                   {tag.tag}
                 </h5>
               )
             })}
-            <h2 className="absolute right-5">{list.likesCount} ❤</h2>
+            <h3 className="absolute right-5">{list.likesCount} ❤</h3>
           </div>
         </div>
       </Link>

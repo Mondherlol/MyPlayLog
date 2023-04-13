@@ -2,6 +2,7 @@ import { DownOutlined } from '@ant-design/icons'
 import { Dropdown, Space } from 'antd'
 import { useState, useEffect } from 'react'
 import './../ListPage/FilterList.css'
+import { useTranslation } from 'react-i18next'
 
 export default function SortingLists({
   sortBy,
@@ -11,29 +12,30 @@ export default function SortingLists({
   setSortQuery,
 }) {
   const [currentSort, setCurrentSort] = useState('Name')
+  const { t } = useTranslation()
 
   const items = [
     {
       key: 'name',
-      label: 'Name',
+      label: t('name'),
     },
     {
       key: 'lastUpdate',
-      label: 'Last update',
+      label: t('last_update'),
     },
     {
       key: 'likesCount',
-      label: 'Likes',
+      label: t('sort_likes'),
     },
   ]
   useEffect(() => {
     setSortQuery(`&sort=${sortBy}&order=${sortOrder}`)
     setCurrentSort(
       sortBy === 'name'
-        ? 'Name'
+        ? t('name')
         : sortBy === 'lastUpdate'
-        ? 'Last update'
-        : 'Likes'
+        ? t('last_update')
+        : t('sort_likes')
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, sortOrder])

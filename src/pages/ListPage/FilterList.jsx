@@ -2,84 +2,87 @@ import { DownOutlined } from '@ant-design/icons'
 import { Dropdown, Space } from 'antd'
 import { useState, useEffect } from 'react'
 import './FilterList.css'
+import { useTranslation } from 'react-i18next'
 
 export default function FilterList({ setList, isRanked, setProgress }) {
   const [sortBy, setSortBy] = useState(isRanked ? 'rank' : 'dateAdded')
   const [currentSort, setCurrentSort] = useState('Date added')
   const [sortOrder, setSortOrder] = useState('desc')
+  const { t } = useTranslation()
 
   const items = isRanked
     ? [
         {
           key: 'rank',
-          label: 'Rank',
+          label: t('sort_rank'),
         },
         {
           key: 'name',
-          label: 'Name',
+          label: t('name'),
         },
         {
           key: 'dateAdded',
-          label: 'Date added',
+          label: t('date_added'),
         },
         {
           key: 'releaseDate',
-          label: 'Release Date',
+          label: t('release_date'),
         },
         {
           key: 'rating',
-          label: 'Rating',
+          label: t('rating'),
         },
       ]
     : [
         {
           key: 'name',
-          label: 'Name',
+          label: t('name'),
         },
         {
           key: 'dateAdded',
-          label: 'Date added',
+          label: t('date_added'),
         },
         {
           key: 'releaseDate',
-          label: 'Release Date',
+          label: t('release_date'),
         },
         {
           key: 'rating',
-          label: 'Rating',
+          label: t('rating'),
         },
       ]
 
   useEffect(() => {
     if (sortBy === 'name') {
       setList((list) => ({ ...list, games: sortByName(list.games, sortOrder) }))
-      setCurrentSort('Name')
+      setCurrentSort(t('name'))
     } else if (sortBy === 'releaseDate') {
       setList((list) => ({
         ...list,
         games: sortByReleaseDate(list.games, sortOrder),
       }))
-      setCurrentSort('Release Date')
+      setCurrentSort(t('release_date'))
     } else if (sortBy === 'dateAdded') {
       setList((list) => ({
         ...list,
         games: sortByDateAdded(list.games, sortOrder),
       }))
-      setCurrentSort('Date added')
+      setCurrentSort(t('date_added'))
     } else if (sortBy === 'rating') {
       setList((list) => ({
         ...list,
         games: sortByRating(list.games, sortOrder),
       }))
-      setCurrentSort('Rating')
+      setCurrentSort(t('rating'))
     } else if (sortBy === 'rank') {
       setList((list) => ({
         ...list,
         games: sortByRank(list.games, sortOrder),
       }))
-      setCurrentSort('Rank')
+      setCurrentSort(t('sort_rank'))
     }
     setProgress(100)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, sortOrder, setList])
 
   const sortByName = (games, sortOrder) => {

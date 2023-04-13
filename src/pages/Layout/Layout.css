@@ -1,0 +1,112 @@
+.navbarBg {
+  z-index: 9;
+  position: sticky;
+  top: 0;
+  transition: 0.2s;
+  height: 0 !important;
+
+  margin-top: -75px;
+  filter: opacity(100%);
+  border-bottom: 75px solid #08071b50;
+
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+
+
+.sideBarOpened {
+  opacity: 0.5;
+  height: 100%;
+  overflow: hidden !important;
+}
+.no-scroll {
+  overflow: hidden;
+}
+
+
+
+.btn-save-list:hover{
+  transform: translateX(3px);
+  background-color:  #ffcf32;
+}
+.btn-save-list{
+  transition: .1s;
+}
+.btn-delete-list{
+  background-color: rgb(255, 49, 46);
+  transition: .1s;
+}
+.btn-delete-list:hover{
+  background-color:rgb(195, 54, 52);
+  transform: translateX(3px);
+}
+.btn-view-list{
+  background-color: rgb(19, 18, 42);
+  transition: .1s;
+}
+.btn-view-list:hover{
+  background-color: rgb(0, 0, 0);
+  transform: translateX(3px);
+}
+
+
+.arrow-wrapper{
+  display: flex;
+}
+.arrow{
+    padding: 10px;
+    animation: bounceArray 0.6s;
+    animation-direction: alternate;
+
+}
+.arrow:hover{
+    animation-iteration-count: infinite;
+    cursor:pointer;
+}
+
+
+.arrow-head{
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right:  4px solid transparent;
+    /* border-bottom: 4px solid rgb(255, 255, 255); */
+}
+.down-arrow-head{
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right:  4px solid transparent;
+    /* border-top: 4px solid rgb(255, 255, 255); */
+}
+.arrow-body{
+    height: 10px;
+    width: 2px;
+    background-color: rgb(255, 255, 255);
+    margin-left: 3px
+}
+
+@keyframes bounceArray {
+  from { transform: translate3d(0, 0, 0);     }
+  to   { transform: translate3d(0, 5px, 0); }
+}
+
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
+.loading {
+  border-radius: 8px;
+  background-color:    rgba(217, 217, 217, 0.2)!important;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, .5) 50%,
+    rgba(255, 255, 255, 0) 60%
+  )rgba(217, 217, 217, 0.2);
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 1s loading ease-in-out infinite;
+}

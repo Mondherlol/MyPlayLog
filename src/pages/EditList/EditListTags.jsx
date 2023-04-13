@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Input, Space, Tag, Tooltip, ConfigProvider } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import colors from '../../utils/style/colors'
+import { t } from 'i18next'
 
 function EditListTags({ tags, setTags }) {
   const [inputVisible, setInputVisible] = useState(false)
@@ -143,10 +144,11 @@ function EditListTags({ tags, setTags }) {
             onChange={handleInputChange}
             onBlur={handleInputConfirm}
             onPressEnter={handleInputConfirm}
+            maxLength={20}
           />
         ) : (
           <Tag style={tagPlusStyle} onClick={showInput}>
-            <PlusOutlined /> New Tag
+            <PlusOutlined /> {t('new_tag')}
           </Tag>
         )}
       </Space>

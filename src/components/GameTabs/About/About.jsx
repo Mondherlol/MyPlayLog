@@ -32,7 +32,7 @@ const StyledTh = styled.th`
   padding: 7px;
   padding-left: 20px;
 `
-const StyledLink = styled.span`
+const StyledLink = styled(Link)`
   color: ${colors.primary};
   font-weight: 400;
   font-size: 16px;
@@ -158,7 +158,9 @@ function AboutGame({ game }) {
                   {game.genres.map((genre, index) => {
                     return (
                       <Fragment key={genre.slug}>
-                        <StyledLink>{t(genre.slug)}</StyledLink>
+                        <StyledLink to={`/search?genres=${genre.id}`}>
+                          {t(genre.slug)}
+                        </StyledLink>
                         {index < game.genres.length - 1 && <span>, </span>}
                       </Fragment>
                     )
@@ -193,7 +195,9 @@ function AboutGame({ game }) {
                   {game.themes.map((theme, index) => {
                     return (
                       <Fragment key={theme.slug}>
-                        <StyledLink>{t(theme.slug)}</StyledLink>
+                        <StyledLink to={`/search?themes=${theme.id}`}>
+                          {t(theme.slug)}
+                        </StyledLink>
                         {index < game.themes.length - 1 && <span>, </span>}
                       </Fragment>
                     )

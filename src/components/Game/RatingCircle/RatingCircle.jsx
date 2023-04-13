@@ -73,17 +73,17 @@ function RatingCircle({ rating, rating_count, slug }) {
       ? colors.average
       : colors.unfavorable
 
-  const [animatedRating, setAnimatedRating] = useState(0)
+  // const [animatedRating, setAnimatedRating] = useState(0)
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (animatedRating < rating) {
-        setAnimatedRating(Math.min(animatedRating + 2, rating))
-      }
-    }, 30)
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (animatedRating < rating) {
+  //       setAnimatedRating(Math.min(animatedRating + 2, rating))
+  //     }
+  //   }, 30)
 
-    return () => clearInterval(intervalId)
-  }, [rating, animatedRating])
+  //   return () => clearInterval(intervalId)
+  // }, [rating, animatedRating])
 
   const { t } = useTranslation()
   return (
@@ -114,7 +114,7 @@ function RatingCircle({ rating, rating_count, slug }) {
             >
               <RatingContent>
                 <RatingPercentage>
-                  {value !== 0 && <span>{Math.round(animatedRating)}</span>}%
+                  {value !== 0 && <span>{Math.round(rating)}</span>}%
                 </RatingPercentage>
               </RatingContent>
             </CircularProgressbarWithChildren>

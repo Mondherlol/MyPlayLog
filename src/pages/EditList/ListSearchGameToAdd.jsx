@@ -4,12 +4,17 @@ import { debounce } from 'lodash'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
 import colors from '../../utils/style/colors'
+import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
+import { useRef } from 'react'
 
 export default function ListSearchGameToAdd({ listId, list, setList }) {
   const [options, setOptions] = useState([])
   const [results, setResults] = useState([])
   const [selectedGame, setSelectedGame] = useState({})
   const [progress, setProgress] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (selectedGame && selectedGame !== {} && selectedGame.id) {
@@ -25,7 +30,8 @@ export default function ListSearchGameToAdd({ listId, list, setList }) {
         if (id !== undefined) {
           const config = {
             method: 'post',
-            url: `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/lists/game?ids=${id}`,
+            url: `${process.env.REACT_APP_IP_ADRESS}/api/lists/game?ids=${id}`,
+            withCredentials: true,
             headers: {
               'Content-Type': 'application/json',
             },
@@ -34,7 +40,6 @@ export default function ListSearchGameToAdd({ listId, list, setList }) {
           axios(config)
             .then((res) => {
               setProgress(80)
-              console.log(res)
               setList((prevState) => {
                 let gameToAdd = { ...selectedGame }
                 gameToAdd.id_IGDB = gameToAdd.id
@@ -50,25 +55,46 @@ export default function ListSearchGameToAdd({ listId, list, setList }) {
                 return prevState
               })
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+              console.log(err)
+              toast.error(err.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                theme: 'dark',
+              })
+            })
             .finally(() => setProgress(100))
         }
       } else {
-        console.log('Game already in list.')
+        toast.info(t('game_already_in_list'), {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          theme: 'dark',
+          autoClose: 3000,
+        })
       }
       setSelectedGame({})
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGame])
 
-  const handleSearch = debounce((value) => {
-    if (value.length > 2) searchGame(value)
-  }, 500)
+  function debounce(func, delay) {
+    let timer
+    let lastArgs
+    return function () {
+      const context = this
+      const args = arguments
+      clearTimeout(timer)
+      lastArgs = args
+      timer = setTimeout(() => {
+        func.apply(context, lastArgs)
+      }, delay)
+    }
+  }
 
   const onSelect = (value) => {
-    console.log('onSelect', value)
     const game = results.find((g) => g.slug === value)
     setSelectedGame(game)
+    setSearchValue('')
   }
   function searchGame(name) {
     if (name && name !== '') {
@@ -76,7 +102,7 @@ export default function ListSearchGameToAdd({ listId, list, setList }) {
 
       axios
         .get(
-          `http://${process.env.REACT_APP_IP_ADRESS}:8000/api/games/search/light/${name}`
+          `${process.env.REACT_APP_IP_ADRESS}/api/games/search/light/${name}`
         )
         .then((res) => setResults(res.data))
         .catch((err) => console.log(err))
@@ -136,6 +162,16 @@ export default function ListSearchGameToAdd({ listId, list, setList }) {
       )
   }, [results])
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      console.log(searchValue)
+      if (searchValue.length > 2) {
+        searchGame(searchValue)
+      }
+    }, 500)
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchValue])
+
   return (
     <>
       <LoadingBar
@@ -148,12 +184,20 @@ export default function ListSearchGameToAdd({ listId, list, setList }) {
         style={{
           width: 300,
         }}
+        value={searchValue}
         options={options}
         onSelect={onSelect}
-        onSearch={handleSearch}
+        // onSearch={handleSearch}
         notFoundContent={'Pas de résultat !'}
       >
-        <Input.Search size="large" enterButton placeholder="Search any game" />
+        <Input.Search
+          size="large"
+          placeholder={t('search_any_game')}
+          onChange={(e) => {
+            setSearchValue(e.target.value)
+            // handleSearch(e.target.value)
+          }}
+        />
       </AutoComplete>
     </>
   )

@@ -1,9 +1,15 @@
-import React, { Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+
+import './Home.css'
 import colors from '../../utils/style/colors'
-import Test from '../../components/Test/Test'
+import GamesSections from './HomeComponents/GamesSections'
+import SelectionGames from './HomeComponents/SelectionGames'
+import PopularLists from './HomeComponents/PopularLists'
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -12,64 +18,83 @@ const HomeWrapper = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 10px;
+  padding-top: 80px;
 `
 
 function HomePage() {
   const { t } = useTranslation()
   document.title = 'MyPlayLog - ' + t('home')
+  const [latestGames, setLatestGames] = useState([])
+  const [upcomingGames, setUpcomingGames] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsLoading(true)
+    //Récuperer les objets si stockés dans le storage
+    const latestGames = localStorage.getItem('latestGames')
+    const upcomingGames = localStorage.getItem('upcomingGames')
+    const expirationDate = localStorage.getItem('expirationDate')
+
+    if (
+      latestGames &&
+      upcomingGames &&
+      expirationDate &&
+      new Date() < new Date(expirationDate)
+    ) {
+      setLatestGames(JSON.parse(latestGames))
+      setUpcomingGames(JSON.parse(upcomingGames))
+      setIsLoading(false)
+    } else {
+      axios
+        .get(`${process.env.REACT_APP_IP_ADRESS}/api/games/latest`)
+        .then((res) => {
+          setLatestGames(res.data[0].result)
+          setUpcomingGames(res.data[1].result)
+          const expiration = new Date()
+          expiration.setHours(expiration.getHours() + 12) // expiration dans 12 heures
+          localStorage.setItem(
+            'latestGames',
+            JSON.stringify(res.data[0].result)
+          )
+          localStorage.setItem(
+            'upcomingGames',
+            JSON.stringify(res.data[1].result)
+          )
+          localStorage.setItem('expirationDate', expiration)
+        })
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <HomeWrapper>
-      {/* //Suspense sert à attendre que l'appel API s'effectue avant de rendre le composant  */}
       <Suspense fallback="loading">
-        <div className=" text-white font-bold text-base md:text-4xl text-center mt-auto mb-0">
+        <div className=" text-white font-bold text-base text-center">
           <h1>{t('welcome_to_home_page')}</h1>
         </div>
-        <div className="   flex  flex-row justify-center items-center flex-wrap mx-auto mb-auto gap-2 mt-6 ">
-          <Link to="/game/super-mario-galaxy">
-            <img
-              className="w-24  h-42"
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co21ro.jpg"
-              alt="Mario Galaxy"
-            />
-          </Link>
-          <Link to="/game/cthulhu-saves-the-world-super-hyper-enhanced-championship-edition-alpha-diamond-dx-plus-alpha-fes-hd-premium-enhanced-game-of-the-year-collectors-edition-without-avatars">
-            <img
-              className="w-24  h-42 "
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/nocover.png"
-              alt="Long jeu"
-            />
-          </Link>
-          <Link to="/game/the-legend-of-zelda-tears-of-the-kingdom">
-            <img
-              className="w-24  h-42"
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co5vmg.jpg"
-              alt="Zelda"
-            />
-          </Link>
-          <Link to="/game/the-wolf-among-us-2">
-            <img
-              className="w-24  h-42 "
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co4ha1.jpg"
-              alt="Wolf Among Us 2"
-            />
-          </Link>
-          <Link to="/game/pokemon-mystery-dungeon-red-rescue-team">
-            <img
-              className="w-24  h-42 "
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co21em.jpg"
-              alt="Wolf Among Us 2"
-            />
-          </Link>
-          <Link to="/game/persona-5-royal">
-            <img
-              className="w-24  h-42 "
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1nic.jpg"
-              alt="Wolf Among Us 2"
-            />
-          </Link>
+        <GamesSections
+          games={latestGames}
+          nameSection={'trending'}
+          isLoading={isLoading}
+        />
+        <div className="mb-4" />
+
+        <div className="w-full ">
+          <PopularLists />
         </div>
-        <div className="w-full justify-center items-center ">
-          <Test />
+        <div className="mb-4" />
+
+        <GamesSections
+          games={upcomingGames}
+          nameSection={'upcoming'}
+          isLoading={isLoading}
+        />
+
+        <div className="w-full ">
+          <SelectionGames />
         </div>
       </Suspense>
     </HomeWrapper>
