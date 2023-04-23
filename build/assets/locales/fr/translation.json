@@ -67,6 +67,17 @@
     "category_12": "un jeu dérivé",
     "category_13": "un pack",
     "category_14": "une mise à jour",
+
+       
+    "categ_1":"DLC",
+    "categ_2":"Extension",
+    "categ_4": "Standalone",
+    "categ_8": "Remake",
+    "categ_9": "Remasterisé",
+    "categ_10": "Version enrichie",
+    "categ_11": "Portage",
+    "categ_12": "Jeu dérivé",
+ 
     
     "region_1": "Europe",
     "region_2": "Amérique du Nord",
@@ -194,5 +205,114 @@
     "players":"joueurs",
     "critics":"critiques",
     "critic_ratings":"Notes des critiques",
-    "players_ratings":"Notes des joueurs"
+    "players_ratings":"Notes des joueurs",
+
+    "go_backwards":"Faire marche arrière",
+
+    "popular":"Populaires",
+    "trending":"en tendances",
+    "upcoming":"à venir",
+    "selections_of_the":"Sélections du",
+    "month":"Mois",
+    "games":"Jeux",
+
+    "create_new_list":"Créer nouvelle liste",
+    "name_your_list":"Nommez votre liste",
+    "visibility":"Visibilité",
+    "public":"Publique",
+    "private":"Privée",
+    "type":"Type",
+    "classic":"Classique",
+    "top":"Top",
+    "add_tag":"Ajouter un tag",
+    "clear_tags":"Effacer les tags",
+    "cancel":"Annuler",
+    "create":"Créer",
+    "describe_your_list_in_some_words":"Décrivez votre liste en quelques mots",
+    "best_fighting_games":"Les meilleurs jeux de combat",
+
+    "search":"Rechercher",
+    "name_tag":"Nom, tag ...",
+    "all":"Tous",
+    "clear_filters":"Effacer les filtres",
+    "create_your_list":"Créez votre liste",
+    "results":"Résultats",
+    "last_update":"Récentes",
+    "name":"Nom",
+    "sort_likes":"Popularité",
+    "no_result":"Aucun résultat",
+    "filter":"Filtre",
+ 
+    "list_from":"Liste de",
+    "follow":"Suivre",
+    "edit":"Modifier",
+    "delete":"Effacer",
+    "list_viewed":"Liste vue {{view}} fois",
+    "comments":"Commentaires",
+    "created":"Créée le",
+    "last_update_list":"Modifiée le",
+
+    "date_added":"Date d'ajout",
+    "release_date":"Date de sortie",
+    "rating":"Notes",
+    "sort_rank":"Classement",
+
+    "yes":"Oui",
+    "no":"Non",
+    "are_you_sure_to_delete_this_list":"Voulez-vous supprimer cette liste ",
+    "this_action_is":"Cette action est",
+    "irreversible":"irréversible",
+
+    "list_name":"Nom de la liste",
+    "add_game":"Ajouter un jeu",
+    "description":"Description",
+    "save_list":"Sauvegarder",
+    "view_list":"Voir la liste",
+    "new_tag":"Nouveau Tag",
+    "search_any_game":"Rechercher un jeu",
+    "enter_list_name":"Saisissez le nom de la liste",
+    "remove_this_game":"Retirer ce jeu",
+    "apply_filter":"Appliquer filtres",
+    "filters":"Filtres",
+
+    "list_deleted_with_success":"Liste supprimée avec succès.",
+    "game_already_in_list":"Ce jeu est déjà dans votre liste.",
+    "list_updated_with_success":"Liste modifiée avec succès.",
+    "games_added_with_success":"Jeu ajouté avec succès.",
+    "games_removed_with_success":"Jeu retiré avec succès.",
+    "profile_updated_with_success":"Profil mis à jour.",
+
+
+    "save_profile":"Enregistrer",
+    "edit_your_profile":"Modifier votre profil",
+    "select_a_picture":"Selectionnez une image",
+    "apply":"Appliquer",
+    "followers":"abonnés",
+    "following":"abonnements",
+    "about_user":"À propos de",
+    "member_for":"Membre depuis",
+    "days":"jours",
+    "joined":"Rejoint le",
+    "lists_created":"listes créées",
+    "latest_lists":"Dernières listes",
+    "overview":"Aperçu",
+    "see_all_lists":"Voir toutes les listes",
+    "return":"Retour",
+    "from_which_game":"De quel jeu"
+
+
+
+ 
+
+
+
+   
+
+
+
+
+
+ 
+
+
  }
