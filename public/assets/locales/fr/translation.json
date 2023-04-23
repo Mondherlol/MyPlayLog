@@ -279,7 +279,29 @@
     "game_already_in_list":"Ce jeu est déjà dans votre liste.",
     "list_updated_with_success":"Liste modifiée avec succès.",
     "games_added_with_success":"Jeu ajouté avec succès.",
-    "games_removed_with_success":"Jeu retiré avec succès."
+    "games_removed_with_success":"Jeu retiré avec succès.",
+    "profile_updated_with_success":"Profil mis à jour.",
+
+
+    "save_profile":"Enregistrer",
+    "edit_your_profile":"Modifier votre profil",
+    "select_a_picture":"Selectionnez une image",
+    "apply":"Appliquer",
+    "followers":"abonnés",
+    "following":"abonnements",
+    "about_user":"À propos de",
+    "member_for":"Membre depuis",
+    "days":"jours",
+    "joined":"Rejoint le",
+    "lists_created":"listes créées",
+    "latest_lists":"Dernières listes",
+    "overview":"Aperçu",
+    "see_all_lists":"Voir toutes les listes",
+    "return":"Retour",
+    "from_which_game":"De quel jeu"
+
+
+
  
 
 

@@ -221,17 +221,20 @@ function Navbar({
 
             {openProfileMenu && (
               <div
-                className="absolute mt-2 w-56 h-52 rounded-md mr-28 "
+                className="absolute mt-2 w-56 h-fit pb-4 rounded-md mr-28 "
                 style={{ backgroundColor: colors.backgroundDerivation }}
               >
-                <div className=" rounded-sm cursor-pointer text-white text-base font-bold pl-5 pt-1 pb-1 mt-3 w-full hover:bg-slate-700 hover:ease-in hover:duration-300">
+                {/* <div className=" rounded-sm cursor-pointer text-white text-base font-bold pl-5 pt-1 pb-1 mt-3 w-full hover:bg-slate-700 hover:ease-in hover:duration-300">
                   Account
-                </div>
+                </div> */}
+                <Link to={`/user/${loginData._id}`}>
+                  <div className="rounded-sm cursor-pointer text-white text-base font-bold pl-5 pt-1 pb-1 mt-3 w-full hover:bg-slate-700 hover:ease-in hover:duration-300">
+                    {t('profile')}
+                  </div>
+                </Link>
+
                 <div className="rounded-sm cursor-pointer text-white text-base font-bold pl-5 pt-1 pb-1 mt-3 w-full hover:bg-slate-700 hover:ease-in hover:duration-300">
-                  Profile
-                </div>
-                <div className="rounded-sm cursor-pointer text-white text-base font-bold pl-5 pt-1 pb-1 mt-3 w-full hover:bg-slate-700 hover:ease-in hover:duration-300">
-                  Settings
+                  {t('settings')}
                 </div>
 
                 <hr
@@ -243,7 +246,7 @@ function Navbar({
                   className="rounded-sm cursor-pointer text-white text-base font-bold pl-5 pt-1 pb-1 mt-1 w-full hover:bg-slate-700 hover:ease-in hover:duration-300"
                   onClick={Logout}
                 >
-                  Log out
+                  {t('log_out')}
                 </div>
               </div>
             )}

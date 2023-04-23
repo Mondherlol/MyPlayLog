@@ -61,7 +61,7 @@ const Rank = styled.div`
   height: 35px;
   top: 3px;
   left: 3px;
-  background-color: rgb(8, 7, 27, 0.7);
+    background-color: rgb(8, 7, 27, 0.7);
   border-radius: 12px;
 `
 function RelatedGame({ game }) {

@@ -283,7 +283,27 @@
    "game_already_in_list":"Game already in list.",
    "list_updated_with_success":"List updated with success.",
    "games_added_with_success":"Game added with success.",
-   "games_removed_with_success":"Game removed with success."
+   "games_removed_with_success":"Game removed with success.",
+   "profile_updated_with_success":"Profile updated with success.",
+
+   "save_profile":"Save",
+   "edit_your_profile":"Edit your profil",
+   "select_a_picture":"Select a picture",
+   "apply":"Apply",
+   "followers":"followers",
+   "following":"following",
+   "about_user":"About",
+   "member_for":"Member for",
+   "days":"days",
+   "joined":"Joined",
+   "lists_created":"lists created",
+   "latest_lists":"Latest lists",
+   "overview":"Overview",
+   "see_all_lists":"See all lists",
+   "return":"Go back",
+   "from_which_game":"From wich game"
+
+
 
 
    

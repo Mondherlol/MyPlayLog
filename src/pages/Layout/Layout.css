@@ -39,7 +39,7 @@
 }
 .btn-delete-list:hover{
   background-color:rgb(195, 54, 52);
-  transform: translateX(3px);
+  /* transform: translateX(3px); */
 }
 .btn-view-list{
   background-color: rgb(19, 18, 42);

@@ -10,14 +10,6 @@ import { useTranslation } from 'react-i18next'
 
 export default function SelectionGames() {
   const cards = [
-    // {
-    //   background:
-    //     'https://ggayane.github.io/css-experiments/cards/dark_rider-cover.jpg',
-    //   title:
-    //     'https://ggayane.github.io/css-experiments/cards/dark_rider-title.png',
-    //   character:
-    //     'https://ggayane.github.io/css-experiments/cards/dark_rider-character.webp',
-    // },
     {
       background: BotwBackground,
       title:

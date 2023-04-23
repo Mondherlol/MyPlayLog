@@ -165,17 +165,22 @@ export default function ListPage(props) {
               </Link>
 
               <h4 className="text ">{t('list_from')}</h4>
-              <h2
-                className={` ${
-                  list.owner.username.length > 15
-                    ? 'text-sm'
-                    : list.owner.username.length > 10
-                    ? 'text-base'
-                    : ''
-                }   w-32  text-center text-ellipsis  overflow-hidden whitespace-nowrap`}
+              <Link
+                to={`/user/${list.owner ? list.owner._id : ''}`}
+                className="text-white hover:text-[#fcd500]"
               >
-                {list.owner.username}
-              </h2>
+                <h2
+                  className={` ${
+                    list.owner.username.length > 15
+                      ? 'text-sm'
+                      : list.owner.username.length > 10
+                      ? 'text-base'
+                      : ''
+                  }   w-32  text-center text-ellipsis  overflow-hidden whitespace-nowrap`}
+                >
+                  {list.owner.username}
+                </h2>
+              </Link>
               <button
                 className="p-2 px-4 rounded-xl border-3 bg-transparent hover:cursor-pointer w-full hover:bg-[#fdc500]  text-[#fdc500] hover:text-white"
                 style={{

@@ -140,8 +140,6 @@ export default function EditList() {
       })
     }
 
-    console.log(updatedList)
-
     const config = {
       method: 'put',
       withCredentials: true,

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import ListCard from '../../ExploreLists/ListCard'
 import ListCardPlaceholder from '../../ExploreLists/ListCardPlaceholder'
 import { useEffect } from 'react'
-export default function UserLists({ userId }) {
+export default function UserLists({ userId, username }) {
   const [userLists, setUserLists] = useState([])
   const [totalUserLists, setTotalUserLists] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -31,8 +31,8 @@ export default function UserLists({ userId }) {
     }
   }, [userId])
   return (
-    <div className=" mt-16 p-4 ">
-      <h2>Lists :</h2>
+    <div className=" mt-2 p-4 pt-0 ">
+      <h2>Toutes les listes de {username} :</h2>
       <div className=" mt-2 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 flex-wrap">
         {userLists &&
           !isLoading &&

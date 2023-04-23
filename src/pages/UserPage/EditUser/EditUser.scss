@@ -1,0 +1,83 @@
+.ant-input-data-count{
+    color:white!important;
+}
+.ant-input-show-count-suffix{
+    color:grey!important;
+
+}
+
+
+.modal {
+    font-size: 12px;
+  }
+  .modal > .header {
+    width: 100%;
+    border-bottom: 1px solid gray;
+    font-size: 18px;
+    text-align: center;
+    padding: 5px;
+  }
+  .modal > .content {
+    width: 100%;
+    padding: 10px 5px;
+  }
+  .modal > .actions {
+    width: 100%;
+    padding: 10px 5px;
+    margin: auto;
+    text-align: center;
+  }
+  .modal > .close {
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    padding: 2px 5px;
+    line-height: 20px;
+    right: -10px;
+    top: -10px;
+    font-size: 24px;
+    background: #08071b;
+    border-radius: 18px;
+    border: 1px solid #cfcece;
+  }
+
+  .editUserStyle .ant-modal-content,
+.editUserStyle .ant-modal-header,
+.editUserStyle .ant-modal-title ,
+.editUserStyle .ant-modal-close-x {
+  border-radius: 20px;
+  background-color: #110f32!important;
+  color:white!important;
+  padding-left:5px!important;
+  padding-right:5px!important;
+
+}
+
+.selectList{
+    transition: .1s;
+    /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+    border:1px solid grey;
+}
+.selectList:hover{
+    transform: translateX(6px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.style-checked-list{
+    border:1.5px solid #FCD500;
+
+    transform: translateX(10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+        .ant-checkbox-checked .ant-checkbox-inner {
+            background-color: var(--background-color)!important;
+            border-color: var(--border-color)!important;
+        }
+        .ant-checkbox-wrapper:hover .ant-checkbox-inner{
+            border-color: var(--border-color)!important;
+        }
+        .ant-checkbox-input:hover .ant-checkbox-inner{
+            border-color: var(--border-color)!important;
+
+        }

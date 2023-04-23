@@ -10,6 +10,7 @@ import Login from '../../assets/icons/bottombar/login.png'
 import Signup from '../../assets/icons/bottombar/signup.png'
 import explore from '../../assets/icons/sidebar/game-controller.png'
 import lists from '../../assets/icons/sidebar/bookmark.png'
+import profile from '../../assets/icons/sidebar/avatar.png'
 
 const BottomBarWrapper = styled.div`
   min-width: 320px;
@@ -57,6 +58,7 @@ const StyledLink = styled(Link)`
 function BottomBar() {
   const { t } = useTranslation()
   const { loggedIn } = useContext(LoginContext)
+  const { loginData } = useContext(LoginData)
 
   return (
     <BottomBarWrapper>
@@ -84,6 +86,10 @@ function BottomBar() {
           <StyledLink to="/lists">
             <img className="icon" src={lists} alt="List Icon" />
             <div>{t('lists')}</div>
+          </StyledLink>
+          <StyledLink to={`/user/${loginData._id}`}>
+            <img className="icon" src={profile} alt="Profile Icon" />
+            <div>{t('profile')}</div>
           </StyledLink>
         </>
       )}
